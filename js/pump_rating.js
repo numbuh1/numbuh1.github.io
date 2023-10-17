@@ -1128,6 +1128,41 @@ const expert_titles = [
 		diff: 'S6'
 	},
 ];
+const new_songs = [
+	"Pirate",
+	"Airplane",
+	"STORM",
+	"Beautiful Liar",
+	"After LIKE",
+	"Amor Fati",
+	"Alone",
+	"Teddy Bear",
+	"Nxde",
+	"BOCA",
+	"BATTLE NO.1",
+	"R.I.P",
+	"GOODBOUNCE",
+	"Halcyon",
+	"Altale",
+	"Pneumonoultramicroscopicsilicovolcanoconiosis ft. Kagamine Len/GUMI",
+	"Acquire",
+	"MilK",
+	"Energy Synergy Matrix",
+	"CO5M1C R4ILR0AD",
+	"GOODTEK",
+	"Lohxia",
+	"CHAOS AGAIN",
+	"MURDOCH",
+	"Ghroth",
+	"KUGUTSU",
+	"BOOOM!!",
+	"Etude Op 10-4",
+	"Jupin",
+	"Euphorianic",
+	"Showdown",
+	"Versailles",
+	"VECTOR"
+]
 
 fetchAllScores();
 	
@@ -1190,27 +1225,23 @@ function showProgress(page) {
 }
 
 function createAnalytic(scores) {
-	console.log("Run Analytics");
+	console.log("Run Analytics");	
 	
-	$('.pageWrap').prepend('<div id="table_pane" class="row"><div id="table_pane_body" class="col-md-6"><table id="main_table" class="table table-dark table-striped"></table></div></div>');
-	$('#main_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');		
+	// Add Main Table
+	$('.pageWrap').prepend('<div id="table_pane" class="row"><div id="table_pane_body" class="col-md-6"></div></div>');
+	$('#table_pane_body').append('<h1 class="text-white">Single Score Rating</h1><hr><table id="main_table" class="table table-dark table-striped"></table>');
+	$('#main_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');	
 	$('#main_table').css('');
 	$('#main_table').append('<tbody id="main_table_body"><tbody>');
 
+	// Add Coop Table
+	$('#table_pane_body').append('<h1 class="text-white">Coop Score Rating</h1><hr><table id="coop_table" class="table table-dark table-striped"></table>');
+	$('#coop_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');
+	$('#coop_table').append('<tbody id="coop_table_body"><tbody>');
+
+	var single_idx = 0;
+	var coop_idx = 0;
 	for (var i = 0; i < scores.length; i++) {
-		switch(scores[i].level_type) {
-			case 'single':
-			    level_style = 'style="font-weight: bolder; color: orangered;"';
-			    break;
-			case 'double':
-			    level_style = 'style="font-weight: bolder; color: lawngreen;"';
-			    break;
-			case 'coop':
-			level_style = 'style="font-weight: bolder; color: yellow;"';
-			break;
-		    default:
-			level_style = '';
-		}
 		switch(scores[i].score_rate) {
 			case 'sss_p':
 			case 'sss':
@@ -1224,19 +1255,41 @@ function createAnalytic(scores) {
 			    break;
 			case 'aaa_p':
 			case 'aaa':
-			score_style = 'style="font-weight: bolder; color: silver;"';
-			break;
+				score_style = 'style="font-weight: bolder; color: silver;"';
+				break;
 		    case 'aa_p':
 		    case 'aa':
 		    case 'a_p':
 		    case 'a':
-			score_style = 'style="font-weight: bolder; color: orangered;"';
-			break;
+				score_style = 'style="font-weight: bolder; color: orangered;"';
+				break;
 		    default:
-			score_style = 'style="font-weight: bolder; color: greenyellow;"';
+				score_style = 'style="font-weight: bolder; color: greenyellow;"';
 		}
-		$('#main_table_body').append('<tr>' +
-			'<td>' + (i+1) + '</td>' +
+		switch(scores[i].level_type) {
+			case 'single':
+			    level_style = 'style="font-weight: bolder; color: orangered;"';
+			    table_to_add = '#main_table_body';
+			    single_idx++;
+			    index = single_idx;
+			    break;
+			case 'double':
+			    level_style = 'style="font-weight: bolder; color: lawngreen;"';
+			    table_to_add = '#main_table_body';
+			    single_idx++;
+			    index = single_idx;
+			    break;
+			case 'coop':
+				level_style = 'style="font-weight: bolder; color: yellow;"';
+				table_to_add = '#coop_table_body'
+				coop_idx++;
+			    index = coop_idx;
+				break;
+		    default:
+				level_style = '';
+		}
+		$(table_to_add).append('<tr>' +
+			'<td>' + index + '</td>' +
 			'<td>' + scores[i].name + '</td>' +
 			'<td ' + level_style + '>' + scores[i].level_text + '</td>' +
 			'<td>' + scores[i].score_text + '</td>' +
@@ -1245,7 +1298,8 @@ function createAnalytic(scores) {
 	}
 
 
-	$('#table_pane').append('<div id="table_pane_progress" class="col-md-6"><table id="progress_table" class="table table-dark table-striped"></table></div>');
+	$('#table_pane').append('<div id="table_pane_progress" class="col-md-6"></div>');
+	$('#table_pane_progress').append('<h1 class="text-white">Title Progress</h1><hr><table id="progress_table" class="table table-dark table-striped"></table>');
 	$('#progress_table').append('<thead class="thead-dark"><tr><th width="180">Title</th><th width="180">Description</th><th>Progress</th></tr></thead>');
 	$('#progress_table').append('<tbody id="progress_table_body"><tbody>');
 
@@ -1264,6 +1318,8 @@ function createAnalytic(scores) {
 		level_progress[level_progress_list[i].diff] = level_progress_list[i].rating;
 	}
 
+	var skill_title_count = 0;
+	var boss_title_count = 0;
 	for (var i = 0; i < expert_titles.length; i++) {
 		switch(expert_titles[i].tier) {
 			case 'platinum':
@@ -1273,13 +1329,13 @@ function createAnalytic(scores) {
 			    title_style = 'style="font-weight: bolder; color: gold;"';
 			    break;
 			case 'silver':
-			title_style = 'style="font-weight: bolder; color: silver;"';
-			break;
+				title_style = 'style="font-weight: bolder; color: silver;"';
+				break;
 		    case 'bronze':
-			title_style = 'style="font-weight: bolder; color: orangered;"';
-			break;
+				title_style = 'style="font-weight: bolder; color: orangered;"';
+				break;
 		    default:
-			title_style = '';
+				title_style = '';
 		}
 		switch(expert_titles[i].type) {
 			case 'rating':
@@ -1321,7 +1377,8 @@ function createAnalytic(scores) {
 					score_text = current_song.score_text;
 				}
 				progress = Math.round(parseInt(current_song_score) / 1000000 * 100);
-				if(current_song_score > 990000) {
+				if(current_song_score > 990000) {					
+					skill_title_count++;
 					bar_bg = 'bg-success';
 
 					skill_count = parseInt($('#skill_count_skill').val()) + 1;
@@ -1361,6 +1418,7 @@ function createAnalytic(scores) {
 					score_text = 0;
 					bar_bg = 'bg-danger';
 				} else {
+					boss_title_count++;
 					current_song_score = current_song.score;
 					score_text = current_song.score_text;
 					bar_bg = 'bg-success';
@@ -1376,9 +1434,138 @@ function createAnalytic(scores) {
 					'</div></td>');
 				break;
 			default:
-			continue;		    	
+				continue;		    	
 		}
 	}
+
+	$('.pageWrap').prepend('<div id="widget-pane" class="row"><h1 style="color:white">Stats</h1></div><hr>');
+
+	scores.sort(SortByRating);
+
+	var single_song_scores = $.grep(scores, function(s) {
+	    return s.level_type != 'coop';
+	});
+	single_song_scores.sort(SortByRating);
+
+	var single_song_scores_single = $.grep(scores, function(s) {
+	    return s.level_type == 'single';
+	});
+	single_song_scores_single.sort(SortByRating);
+	var single_song_scores_double = $.grep(scores, function(s) {
+	    return s.level_type == 'double';
+	});
+	single_song_scores_double.sort(SortByRating);
+
+	var new_song_scores = $.grep(scores, function(s) {
+	    return new_songs.indexOf(s.name) >= 0 && s.level_type != 'coop';
+	});
+	new_song_scores.sort(SortByRating);
+	var new_song_scores_single = $.grep(scores, function(s) {
+	    return new_songs.indexOf(s.name) >= 0 && s.level_type == 'single';
+	});
+	new_song_scores_single.sort(SortByRating);
+	var new_song_scores_double = $.grep(scores, function(s) {
+	    return new_songs.indexOf(s.name) >= 0 && s.level_type == 'double';
+	});
+	new_song_scores_double.sort(SortByRating);
+
+	var all_rating = 0;
+	var max_all_rating = single_song_scores.length < 50 ? single_song_scores.length : 50;
+	for (var i = 0; i < max_all_rating; i++) {
+		all_rating += single_song_scores[i].rating;
+	}
+
+	var all_rating_single = 0;
+	var max_all_rating_single = single_song_scores_single.length < 50 ? single_song_scores_single.length : 50;
+	for (var i = 0; i < max_all_rating_single; i++) {
+		all_rating_single += single_song_scores_single[i].rating;
+	}
+	var all_rating_double = 0;
+	var max_all_rating_double = single_song_scores_double.length < 50 ? single_song_scores_double.length : 50;
+	for (var i = 0; i < max_all_rating_double; i++) {
+		all_rating_double += single_song_scores_double[i].rating;
+	}
+
+	var new_rating = 0;
+	var max_new_rating = new_song_scores.length < 20 ? new_song_scores.length : 20;
+	for (var i = 0; i < max_new_rating; i++) {
+		new_rating += new_song_scores[i].rating;
+	}
+
+	var new_rating_single = 0;
+	var max_new_rating_single = new_song_scores_single.length < 20 ? new_song_scores_single.length : 20;
+	for (var i = 0; i < max_new_rating_single; i++) {
+		new_rating_single += new_song_scores_single[i].rating;
+	}
+	var new_rating_double = 0;
+	var max_new_rating_double = new_song_scores_double.length < 20 ? new_song_scores_double.length : 20;
+	for (var i = 0; i < max_new_rating_double; i++) {
+		new_rating_double += new_song_scores_double[i].rating;
+	}
+
+	var max_skill_title_count = $.grep(expert_titles, function(s) {
+	    return s.type == 'skill';
+	}).length;
+	var max_boss_title_count = $.grep(expert_titles, function(s) {
+	    return s.type == 'boss';
+	}).length;
+
+	var widget_info = [
+		{
+			label: "All Time Rating",
+			score: all_rating.toLocaleString(),
+			description: "Top 50 Score Rating"
+		},
+		{
+			label: "All Time Rating (Single)",
+			score: all_rating_single.toLocaleString(),
+			description: "Top 50 Score Rating (Single)"
+		},
+		{
+			label: "All Time Rating (Double)",
+			score: all_rating_double.toLocaleString(),
+			description: "Top 50 Score Rating (Double)"
+		},
+		{
+			label: "Skill Title Count",
+			score: skill_title_count + '/' + max_skill_title_count,
+			description: ""
+		},
+		{
+			label: "New Song Rating",
+			score: new_rating.toLocaleString(),
+			description: "Top 20 New Song Score Rating"
+		},
+		{
+			label: "New Song Rating (Single)",
+			score: new_rating_single.toLocaleString(),
+			description: "Top 20 New Song Score Rating (Single)"
+		},
+		{
+			label: "New Song Rating (Double)",
+			score: new_rating_double.toLocaleString(),
+			description: "Top 20 New Song Score Rating (Double)"
+		},
+		{
+			label: "Boss Breaker Title Count",
+			score: boss_title_count + '/' + max_boss_title_count,
+			description: ""
+		}
+	]
+
+	for (var i = 0; i < widget_info.length; i++) {
+		let item = widget_info[i];
+		$('#widget-pane').append('<div class="card col-md-3"><div class="card-body"><div class="lead">' + item.label + '</div><h2 class="card-title">' + item.score + '</h2><p class="small text-muted">' + item.description + '</p></div></div>');
+	}
+
+	var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores));
+	$('.pageWrap').prepend('<a href="data:' + data + '" class="btn btn-info" download="data.json">Download Scores</a><hr>');
+}
+
+function SortByRating(a, b){
+  var aScore = a.rating;
+  var bScore = b.rating; 
+  return ((aScore > bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
 }
 
 async function fetchScores(url) {
@@ -1425,23 +1612,27 @@ async function fetchScores(url) {
 				level = url.split('num_')[1].split('.png')[0];
 				rating = calculateRating(null, rating_text[score_rate], 'coop');
 				level_text = 'Cx' + level;
-		}						
+		}
 
-		song = {
-		name: song,
-		level_text: level_text,
-		score_text: score,
-		score_rate_text: rating_text[score_rate],
-		rating: rating,
-		score_plate_text: plate_text[score_plate],
-		level_type: level_type,
-		level: level,
-		score: score.replaceAll(',',''),
-		score_rate: score_rate,
-		score_plate: score_plate,
-	}
+		if(level == 'xx') {
+			continue;
+		} else {
+			song = {
+				name: song,
+				level_text: level_text,
+				score_text: score,
+				score_rate_text: rating_text[score_rate],
+				rating: rating,
+				score_plate_text: plate_text[score_plate],
+				level_type: level_type,
+				level: level,
+				score: score.replaceAll(',',''),
+				score_rate: score_rate,
+				score_plate: score_plate,
+			}
 
-	songs.push(song);
+			songs.push(song);
+		}
 	}
 
 	songs.sort(function(a, b){
