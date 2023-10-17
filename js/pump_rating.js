@@ -1167,7 +1167,8 @@ const new_songs = [
 fetchAllScores();
 	
 function fetchAllScores() {
-	let pages = parseInt($('.board_paging button:last').attr('onclick').split('=')[2].split('\'')[0]);
+	let pages = 2;
+	// let pages = parseInt($('.board_paging button:last').attr('onclick').split('=')[2].split('\'')[0]);
 	$('head').append( $('<link rel="stylesheet" type="text/css" />').attr('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css') );	
 	$('#contents').css('background', '#1a1b1e');
 	$('#header').remove();
@@ -1229,7 +1230,7 @@ function createAnalytic(scores) {
 	
 	// Add Main Table
 	$('.pageWrap').prepend('<div id="table_pane" class="row"><div id="table_pane_body" class="col-md-6"></div></div>');
-	$('#table_pane_body').append('<h1 class="text-white">Single Score Rating</h1><hr><table id="main_table" class="table table-dark table-striped"></table>');
+	$('#table_pane_body').append('<h1 class="text-white">Score Rating</h1><hr><table id="main_table" class="table table-dark table-striped"></table>');
 	$('#main_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');	
 	$('#main_table').css('');
 	$('#main_table').append('<tbody id="main_table_body"><tbody>');
@@ -1289,7 +1290,7 @@ function createAnalytic(scores) {
 				level_style = '';
 		}
 		$(table_to_add).append('<tr>' +
-			'<td>' + index + '</td>' +
+			'<td><span class="mr-2">' + index + '</span></td>' +
 			'<td>' + scores[i].name + '</td>' +
 			'<td ' + level_style + '>' + scores[i].level_text + '</td>' +
 			'<td>' + scores[i].score_text + '</td>' +
@@ -1513,49 +1514,57 @@ function createAnalytic(scores) {
 	var widget_info = [
 		{
 			label: "All Time Rating",
+			label_class: "bg-primary",
 			score: all_rating.toLocaleString(),
 			description: "Top 50 Score Rating"
 		},
 		{
 			label: "All Time Rating (Single)",
+			label_class: "bg-danger",
 			score: all_rating_single.toLocaleString(),
 			description: "Top 50 Score Rating (Single)"
 		},
 		{
 			label: "All Time Rating (Double)",
+			label_class: "bg-success",
 			score: all_rating_double.toLocaleString(),
 			description: "Top 50 Score Rating (Double)"
 		},
 		{
 			label: "Skill Title Count",
+			label_class: "bg-secondary",
 			score: skill_title_count + '/' + max_skill_title_count,
-			description: ""
+			description: "Number of Skill titles"
 		},
 		{
 			label: "New Song Rating",
+			label_class: "bg-primary",
 			score: new_rating.toLocaleString(),
 			description: "Top 20 New Song Score Rating"
 		},
 		{
 			label: "New Song Rating (Single)",
+			label_class: "bg-danger",
 			score: new_rating_single.toLocaleString(),
 			description: "Top 20 New Song Score Rating (Single)"
 		},
 		{
 			label: "New Song Rating (Double)",
+			label_class: "bg-success",
 			score: new_rating_double.toLocaleString(),
 			description: "Top 20 New Song Score Rating (Double)"
 		},
 		{
 			label: "Boss Breaker Title Count",
+			label_class: "bg-secondary",
 			score: boss_title_count + '/' + max_boss_title_count,
-			description: ""
+			description: "Number of Boss Breaker titles"
 		}
 	]
 
 	for (var i = 0; i < widget_info.length; i++) {
 		let item = widget_info[i];
-		$('#widget-pane').append('<div class="card col-md-3"><div class="card-body"><div class="lead">' + item.label + '</div><h2 class="card-title">' + item.score + '</h2><p class="small text-muted">' + item.description + '</p></div></div>');
+		$('#widget-pane').append('<div class="col-md-3" style="padding: 20px"><div class="card"><div class="card-body"><div class="lead"><span class="mb-1 badge badge-pill ' + item.label_class + '">' + item.label + '</span></div><h2 class="card-title">' + item.score + '</h2><p class="small text-muted">' + item.description + '</p></div></div></div>');
 	}
 
 	var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores));
