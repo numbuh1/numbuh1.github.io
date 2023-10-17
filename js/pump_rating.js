@@ -1667,6 +1667,10 @@ async function fetchPage(url) {
 
 function calculateRating(level, rate, type) {
 	rate_index = {
+		// 'F':0,
+		'D':0.5,
+		// 'C':0,
+		// 'B':0,
 		'A':0.9,
 		'A+':0.95,
 		'AA':1,
