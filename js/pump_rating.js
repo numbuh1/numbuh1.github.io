@@ -1622,7 +1622,7 @@ async function fetchScores(url) {
 				level_text = 'Cx' + level;
 		}
 
-		if(level == 'xx') {
+		if(level == 'xx' || level == 'x') {
 			continue;
 		} else {
 			song = {
