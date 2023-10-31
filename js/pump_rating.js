@@ -1161,7 +1161,12 @@ const new_songs = [
 	"Euphorianic",
 	"Showdown",
 	"Versailles",
-	"VECTOR"
+	"VECTOR",
+	"WHISPER",
+	"Halloween Party ~Multiverse~",
+	"Lacrimosa",
+	"Galaxy Collapse",
+	"Euphorianic - SHORT CUT -"
 ]
 
 fetchAllScores();
