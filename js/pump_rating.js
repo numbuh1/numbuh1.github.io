@@ -1166,7 +1166,12 @@ const new_songs = [
 	"Halloween Party ~Multiverse~",
 	"Lacrimosa",
 	"Galaxy Collapse",
-	"Euphorianic - SHORT CUT -"
+	"Euphorianic - SHORT CUT -",
+	"ELEVEN",
+	"Neo Catharsis",
+	"Barber's Madness",
+	"Aragami",
+	"Viyella's Nightmare"
 ]
 
 fetchAllScores();
