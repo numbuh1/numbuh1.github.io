@@ -1,0 +1,132 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maimai Plate Tracker by numbuh1 </title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <style>
+html {
+  background-color: #51bcf3;
+}
+
+body {
+  margin: 0 0 30px;
+  padding: 4px 24px;
+  font-family: sans-serif;
+  max-width: 800px;
+  background-color: #51bcf3;
+}
+
+.screw_block {
+    padding: 15px 17px;
+    background: url(./img/icon_screw.png) left top no-repeat, url(./img/icon_screw.png) right top no-repeat, url(./img/icon_screw.png) left bottom no-repeat, url(./img/icon_screw.png) right bottom no-repeat, #fff;
+    box-shadow: 1px 3px 0px rgba(0, 0, 0, 0.4);
+    border: 1px solid #b3b3b3;
+    border-radius: 5px;
+}
+
+.town_block {
+    background: #fff url(./img/back_town_01.png) bottom no-repeat;
+    background-size: 485px;
+    box-shadow: 1px 3px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+}
+
+.bookmarkletTitle {
+  padding-top: 18px;
+  margin: 0;
+}
+
+.screenshot {
+  max-width: 100%;
+}
+
+.bookmarklet {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.bookmarkletScript {
+  border-style: none;
+  background-color: transparent;
+  color: gray;
+  display: block;
+  width: 90%;
+}
+
+.bookmarkletText {
+  padding-right: 12px;
+  flex-basis: 380px;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.bookmarkletImage {
+  padding-top: 20px;
+  flex-basis: 250px;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.otherToolsHeading {
+  margin-bottom: 10px;
+}
+
+.toolItem {
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.toolItem a:visited {
+  color: rgb(0, 56, 216);
+}
+
+.footer {
+  margin-top: 40px;
+}
+
+.credit {
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.authorLink {
+  color: inherit;
+}
+
+.authorLink:visited {
+  color: inherit;
+}
+
+@media only screen and (max-width: 630px) {
+  .bookmarklet {
+    flex-direction: column;
+  }
+  .bookmarkletText,
+  .bookmarkletImage {
+    flex-basis: auto;
+  }
+  .bookmarkletImage {
+    align-self: center;
+  }
+  .screenshot {
+    max-width: 300px;
+  }
+}
+</style>
+</head>
+  <body>
+    <div id="root">
+      <div class="mt-3 p-3 town_block">
+        <h1><b>maimai Plate Tracker</b></h1>
+        <hr>
+        <div class="pageWrap">
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/maimai.js"></script>
+    <script src="./js/jquery-3.3.1.slim.min.js" />
+    <script src="./js/bootstrap.min.js" />
+
+</body></html>
