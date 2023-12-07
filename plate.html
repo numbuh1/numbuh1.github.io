@@ -121,9 +121,21 @@ body {
         <h1><b>maimai Plate Tracker</b></h1>
         <hr>
         <div class="pageWrap">
+          <h3>For PC</h3>
+          <hr>
           <p>1. Drag the link into the bookmarks bar to save the bookmarklet.</p>
           <p><a href='javascript:!function(e){if(["maimaidx-eng.com"].indexOf(e.location.host)>=0){var s=e.createElement("script");s.src="https://numbuh1.github.io/js/maimai_plate_tracker.js?t="+Math.floor(Date.now()/60000);e.body.append(s);}}(document);'>Plate Tracker Bookmarklet</a></p>
           <p>2. Log in to maimai DX NET and click the bookmarklet in bookmarks bar.</p>
+          <br>
+          <h3>For Mobile</h3>
+          <hr>
+          <p>1. Click on the button to copy the script in clipboard.</p>
+          <p><input type="button" value="Copy" onclick="copy()"><input id="copy" type="text" value='javascript:!function(e){if(["maimaidx-eng.com"].indexOf(e.location.host)>=0){var s=e.createElement("script");s.src="https://numbuh1.github.io/js/maimai_plate_tracker.js?t="+Math.floor(Date.now()/60000);e.body.append(s);}}(document);'></p>
+          <p>2. Add the current page to bookmarks.</p>
+          <p>3. Check "Bookmark" settings, replace the URL with what you copied earlier.</p>
+          <p>4. Rename the Bookmark ("Plate Tracker Bookmarklet")</p>
+          <p>5. Log in to maimai DX NET, type and select the Bookmark name on the URL Address bar</p>
+          <br>
         </div>
       </div>
     </div>
@@ -132,4 +144,5 @@ body {
     <script src="./js/jquery-3.3.1.slim.min.js" />
     <script src="./js/bootstrap.min.js" />
 
-</body></html>
+</body>
+</html>
