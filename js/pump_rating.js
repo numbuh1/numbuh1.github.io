@@ -1,357 +1,357 @@
 fetchAllScores();
-	
+  
 function fetchAllScores() {
-	let pages = parseInt($('.board_paging button:last').attr('onclick').split('=')[2].split('\'')[0]);
-	$('head').append( $('<link rel="stylesheet" type="text/css" />').attr('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css') );	
-	$('#contents').css('background', '#1a1b1e');
-	$('#header').remove();
-	$('.pageWrap').html('');
-	showProgress(pages);
-	let scores = [];
-	let current_url = window.location.href;	
+  let pages = parseInt($('.board_paging button:last').attr('onclick').split('=')[2].split('\'')[0]);
+  $('head').append( $('<link rel="stylesheet" type="text/css" />').attr('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css') ); 
+  $('#contents').css('background', '#1a1b1e');
+  $('#header').remove();
+  $('.pageWrap').html('');
+  showProgress(pages);
+  let scores = [];
+  let current_url = window.location.href; 
 
-	if(window.location.href.indexOf('?') == -1) {
-		current_url = current_url + '?';
-	}
+  if(window.location.href.indexOf('?') == -1) {
+    current_url = current_url + '?';
+  }
 
-	let mark = 1;
-	for (var i = 1; i <= pages; i++) {
-		fetchScores(current_url + '&&page=' + i)
-			.then((score) => {
-				console.log(mark + '/' + pages);
-				$('#current_progress_page').html(mark);
-				$('#fetch_progress_bar').css('width', ((mark/pages)*100) + '%');
-				for (var j = score.length - 1; j >= 0; j--) {
-					scores.push(score[j])
-				}
-				if(mark == pages) {
-					$('#progress_pane').hide();
-					run(scores)
-				}
-				mark++;
-			});
-	}
+  let mark = 1;
+  for (var i = 1; i <= pages; i++) {
+    fetchScores(current_url + '&&page=' + i)
+      .then((score) => {
+        console.log(mark + '/' + pages);
+        $('#current_progress_page').html(mark);
+        $('#fetch_progress_bar').css('width', ((mark/pages)*100) + '%');
+        for (var j = score.length - 1; j >= 0; j--) {
+          scores.push(score[j])
+        }
+        if(mark == pages) {
+          $('#progress_pane').hide();
+          run(scores)
+        }
+        mark++;
+      });
+  }
 }
 
 
 function run(scores) {
-	scores.sort(function(a, b){
-	    var a1 = a.rating, b1 = b.rating;
-	    if(a1 == b1) {
-		var a2 = a.score, b2 = b.score;
-		    if(a2 == b2) {			    	
-			return 0;
-		    }	
-		return a2 > b2 ? -1 : 1;
-	    }
-	    return a1 > b1 ? -1 : 1;
-	});
+  scores.sort(function(a, b){
+      var a1 = a.rating, b1 = b.rating;
+      if(a1 == b1) {
+    var a2 = a.score, b2 = b.score;
+        if(a2 == b2) {            
+      return 0;
+        } 
+    return a2 > b2 ? -1 : 1;
+      }
+      return a1 > b1 ? -1 : 1;
+  });
 
-	createAnalytic(scores);
+  createAnalytic(scores);
 }
 
 function showProgress(page) {
-	$('.pageWrap').prepend('<div id="progress_pane"><h1 style="color:white">Fetching scores:</h1><div id="fetch_progress" class="progress" style="height: 30px;"></div>');
-	$('#fetch_progress').append('<div id="fetch_progress_bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ' +
-		'aria-valuenow="0" aria-valuemin="0" aria-valuemax="' + page + '" style="width: 0%">'+
-		'<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">'+
-		'<span style="font-size: 20px;"><span id="current_progress_page">0</span>/' + page + '</span></div></div>');
+  $('.pageWrap').prepend('<div id="progress_pane"><h1 style="color:white">Fetching scores:</h1><div id="fetch_progress" class="progress" style="height: 30px;"></div>');
+  $('#fetch_progress').append('<div id="fetch_progress_bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ' +
+    'aria-valuenow="0" aria-valuemin="0" aria-valuemax="' + page + '" style="width: 0%">'+
+    '<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">'+
+    '<span style="font-size: 20px;"><span id="current_progress_page">0</span>/' + page + '</span></div></div>');
 }
 
 function createAnalytic(scores) {
-	console.log("Run Analytics");	
-	
-	// Add Main Table
-	$('.pageWrap').prepend('<div id="table_pane" class="row"><div id="table_pane_body" class="col-md-6"></div></div>');
-	$('#table_pane_body').append('<h1 class="text-white">Score Rating</h1><hr><table id="main_table" class="table table-dark table-striped"></table>');
-	$('#main_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');	
-	$('#main_table').css('');
-	$('#main_table').append('<tbody id="main_table_body"><tbody>');
+  console.log("Run Analytics"); 
+  
+  // Add Main Table
+  $('.pageWrap').prepend('<div id="table_pane" class="row"><div id="table_pane_body" class="col-md-6"></div></div>');
+  $('#table_pane_body').append('<h1 class="text-white">Score Rating</h1><hr><table id="main_table" class="table table-dark table-striped"></table>');
+  $('#main_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>'); 
+  $('#main_table').css('');
+  $('#main_table').append('<tbody id="main_table_body"><tbody>');
 
-	// Add Coop Table
-	$('#table_pane_body').append('<h1 class="text-white">Coop Score Rating</h1><hr><table id="coop_table" class="table table-dark table-striped"></table>');
-	$('#coop_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');
-	$('#coop_table').append('<tbody id="coop_table_body"><tbody>');
+  // Add Coop Table
+  $('#table_pane_body').append('<h1 class="text-white">Coop Score Rating</h1><hr><table id="coop_table" class="table table-dark table-striped"></table>');
+  $('#coop_table').append('<thead class="thead-dark"><tr><th width="30">#</th><th>Song</th><th width="50">Diff</th><th width="100">Score</th><th width="50">Rank</th><th width="70">Rating</th></tr></thead>');
+  $('#coop_table').append('<tbody id="coop_table_body"><tbody>');
 
-	var single_idx = 0;
-	var coop_idx = 0;
-	for (var i = 0; i < scores.length; i++) {
-		switch(scores[i].score_rate) {
-			case 'sss_p':
-			case 'sss':
-			    score_style = 'style="font-weight: bolder; color: cyan;"';
-			    break;
-			case 'ss_p':
-			case 'ss':
-			case 's_p':
-			case 's':
-			    score_style = 'style="font-weight: bolder; color: gold;"';
-			    break;
-			case 'aaa_p':
-			case 'aaa':
-				score_style = 'style="font-weight: bolder; color: silver;"';
-				break;
-		    case 'aa_p':
-		    case 'aa':
-		    case 'a_p':
-		    case 'a':
-				score_style = 'style="font-weight: bolder; color: orangered;"';
-				break;
-		    default:
-				score_style = 'style="font-weight: bolder; color: greenyellow;"';
-		}
-		switch(scores[i].level_type) {
-			case 'single':
-			    level_style = 'style="font-weight: bolder; color: orangered;"';
-			    table_to_add = '#main_table_body';
-			    single_idx++;
-			    index = single_idx;
-			    break;
-			case 'double':
-			    level_style = 'style="font-weight: bolder; color: lawngreen;"';
-			    table_to_add = '#main_table_body';
-			    single_idx++;
-			    index = single_idx;
-			    break;
-			case 'coop':
-				level_style = 'style="font-weight: bolder; color: yellow;"';
-				table_to_add = '#coop_table_body'
-				coop_idx++;
-			    index = coop_idx;
-				break;
-		    default:
-				level_style = '';
-		}
-		$(table_to_add).append('<tr>' +
-			'<td><span class="mr-2">' + index + '</span></td>' +
-			'<td>' + scores[i].name + '</td>' +
-			'<td ' + level_style + '>' + scores[i].level_text + '</td>' +
-			'<td>' + scores[i].score_text + '</td>' +
-			'<td ' + score_style + '>' + scores[i].score_rate_text + '</td>' +
-			'<td>' + scores[i].rating + '</td>');		
-	}
-
-
-	$('#table_pane').append('<div id="table_pane_progress" class="col-md-6"></div>');
-	$('#table_pane_progress').append('<h1 class="text-white">Title Progress</h1><hr><table id="progress_table" class="table table-dark table-striped"></table>');
-	$('#progress_table').append('<thead class="thead-dark"><tr><th width="180">Title</th><th width="180">Description</th><th>Progress</th></tr></thead>');
-	$('#progress_table').append('<tbody id="progress_table_body"><tbody>');
-
-	var level_progress = [];
-	var level_progress_list = [];
-	var score_progress = scores;
-	score_progress.reduce(function(res, value) {
-		if (!res[value.level]) {
-		    res[value.level] = { diff: value.level, rating: 0 };
-		    level_progress_list.push(res[value.level])
-		}
-		res[value.level].rating += parseInt(value.rating);
-		return res;
-	}, {});
-	for (var i = 0; i < level_progress_list.length; i++) {
-		level_progress[level_progress_list[i].diff] = level_progress_list[i].rating;
-	}
-
-	var skill_title_count = 0;
-	var boss_title_count = 0;
-	for (var i = 0; i < expert_titles.length; i++) {
-		switch(expert_titles[i].tier) {
-			case 'platinum':
-			    title_style = 'style="font-weight: bolder; color: cyan;"';
-			    break;
-			case 'gold':
-			    title_style = 'style="font-weight: bolder; color: gold;"';
-			    break;
-			case 'silver':
-				title_style = 'style="font-weight: bolder; color: silver;"';
-				break;
-		    case 'bronze':
-				title_style = 'style="font-weight: bolder; color: orangered;"';
-				break;
-		    default:
-				title_style = '';
-		}
-		switch(expert_titles[i].type) {
-			case 'rating':
-				current_level = expert_titles[i].level;
-				current_rating = level_progress[current_level] ? level_progress[current_level] : 0;
-				max_rating = parseInt(expert_titles[i].rating);
-				progress = Math.round((current_rating / max_rating) * 100);
-				if(progress >= 100) {
-					bar_bg = 'bg-success';
-				} else {
-					bar_bg = 'bg-danger';
-				}
-				$('#progress_table_body').append('<tr>' +
-					'<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
-					'<td>' + expert_titles[i].description + '</td>' +
-					'<td><div class="progress" style="position: relative;">' +
-						'<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
-							'aria-valuenow="' + current_rating + '" aria-valuemin="0" aria-valuemax="' + max_rating + '" style="width: ' + progress + '%"></div>' +
-						'<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + current_rating.toLocaleString() + '/' + max_rating.toLocaleString() + '</div>' +
-					'</div></td></tr>');
-			    break;
-			case 'skill_collect':
-				$('#progress_table_body').append('<tr>' +
-					'<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
-					'<td>' + expert_titles[i].description + '</td>' +
-					'<td><div class="progress" style="position: relative;">' +
-						'<div id="progress_bar_' + expert_titles[i].collect_type + '" class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar"' +
-							'aria-valuenow="0" aria-valuemin="0" aria-valuemax="' + expert_titles[i].count + '" style="width: 0%"></div>' +
-						'<div id="progress_bar_' + expert_titles[i].collect_type + '_text" style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">0/' + expert_titles[i].count + '</div>' +
-					'</div></td><tr><input type="hidden" id="skill_count_' + expert_titles[i].collect_type + '" value="0">');
-				break;
-			case 'skill':
-				current_song = scores.find(o => o.name === expert_titles[i].song && o.level_text === expert_titles[i].diff);
-				if(current_song == undefined) {
-					current_song_score = 0;
-					score_text = 0;
-				} else {
-					current_song_score = current_song.score;
-					score_text = current_song.score_text;
-				}
-				progress = Math.round(parseInt(current_song_score) / 1000000 * 100);
-				if(current_song_score > 990000) {					
-					skill_title_count++;
-					bar_bg = 'bg-success';
-
-					skill_count = parseInt($('#skill_count_skill').val()) + 1;
-					$('#skill_count_skill').val(skill_count);
-					$('#progress_bar_skill').css('width', skill_count/60*100 + '%');
-					$('#progress_bar_skill_text').html(skill_count + '/60');
-					if(skill_count == 60) {
-						$('#progress_bar_skill').removeClass('bg-danger');
-						$('#progress_bar_skill').addClass('bg-success');
-					}
+  var single_idx = 0;
+  var coop_idx = 0;
+  for (var i = 0; i < scores.length; i++) {
+    switch(scores[i].score_rate) {
+      case 'sss_p':
+      case 'sss':
+          score_style = 'style="font-weight: bolder; color: cyan;"';
+          break;
+      case 'ss_p':
+      case 'ss':
+      case 's_p':
+      case 's':
+          score_style = 'style="font-weight: bolder; color: gold;"';
+          break;
+      case 'aaa_p':
+      case 'aaa':
+        score_style = 'style="font-weight: bolder; color: silver;"';
+        break;
+        case 'aa_p':
+        case 'aa':
+        case 'a_p':
+        case 'a':
+        score_style = 'style="font-weight: bolder; color: orangered;"';
+        break;
+        default:
+        score_style = 'style="font-weight: bolder; color: greenyellow;"';
+    }
+    switch(scores[i].level_type) {
+      case 'single':
+          level_style = 'style="font-weight: bolder; color: orangered;"';
+          table_to_add = '#main_table_body';
+          single_idx++;
+          index = single_idx;
+          break;
+      case 'double':
+          level_style = 'style="font-weight: bolder; color: lawngreen;"';
+          table_to_add = '#main_table_body';
+          single_idx++;
+          index = single_idx;
+          break;
+      case 'coop':
+        level_style = 'style="font-weight: bolder; color: yellow;"';
+        table_to_add = '#coop_table_body'
+        coop_idx++;
+          index = coop_idx;
+        break;
+        default:
+        level_style = '';
+    }
+    $(table_to_add).append('<tr>' +
+      '<td><span class="mr-2">' + index + '</span></td>' +
+      '<td>' + scores[i].name + '</td>' +
+      '<td ' + level_style + '>' + scores[i].level_text + '</td>' +
+      '<td>' + scores[i].score_text + '</td>' +
+      '<td ' + score_style + '>' + scores[i].score_rate_text + '</td>' +
+      '<td>' + scores[i].rating + '</td>');   
+  }
 
 
-					sub_skill_count = parseInt($('#skill_count_' + expert_titles[i].collect_type).val()) + 1;
-					$('#skill_count_' + expert_titles[i].collect_type).val(sub_skill_count);
-					$('#progress_bar_' + expert_titles[i].collect_type).css('width', sub_skill_count/10*100 + '%');
-					$('#progress_bar_' + expert_titles[i].collect_type + '_text').html(sub_skill_count + '/10');
-					if(sub_skill_count == 10) {
-						$('#progress_bar_' + expert_titles[i].collect_type).removeClass('bg-danger');
-						$('#progress_bar_' + expert_titles[i].collect_type).addClass('bg-success');
-					}
-				} else {
-					bar_bg = 'bg-danger';
-				}
-				$('#progress_table_body').append('<tr>' +
-					'<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
-					'<td>' + expert_titles[i].description + '</td>' +
-					'<td><div class="progress" style="position: relative;">' +
-						'<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
-							'aria-valuenow="' + current_song_score + '" aria-valuemin="0" aria-valuemax="1000000" style="width: ' + progress + '%"></div>' +
-						'<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + score_text + '/1,000,000</div>' +
-					'</div></td>');
-				break;
-			case 'boss':
-				current_song = scores.find(o => o.name === expert_titles[i].song && o.level_text === expert_titles[i].diff);
-				if(current_song == undefined) {
-					current_song_score = 0;
-					score_text = 0;
-					bar_bg = 'bg-danger';
-				} else {
-					boss_title_count++;
-					current_song_score = current_song.score;
-					score_text = current_song.score_text;
-					bar_bg = 'bg-success';
-				}
-				progress = Math.round(parseInt(current_song_score) / 1000000 * 100);
-				$('#progress_table_body').append('<tr>' +
-					'<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
-					'<td>' + expert_titles[i].description + '</td>' +
-					'<td><div class="progress" style="position: relative;">' +
-						'<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
-							'aria-valuenow="' + current_song_score + '" aria-valuemin="0" aria-valuemax="1000000" style="width: ' + progress + '%"></div>' +
-						'<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + score_text + '/1,000,000</div>' +
-					'</div></td>');
-				break;
-			default:
-				continue;		    	
-		}
-	}
+  $('#table_pane').append('<div id="table_pane_progress" class="col-md-6"></div>');
+  $('#table_pane_progress').append('<h1 class="text-white">Title Progress</h1><hr><table id="progress_table" class="table table-dark table-striped"></table>');
+  $('#progress_table').append('<thead class="thead-dark"><tr><th width="180">Title</th><th width="180">Description</th><th>Progress</th></tr></thead>');
+  $('#progress_table').append('<tbody id="progress_table_body"><tbody>');
 
-	scores.sort(SortByRating);
+  var level_progress = [];
+  var level_progress_list = [];
+  var score_progress = scores;
+  score_progress.reduce(function(res, value) {
+    if (!res[value.level]) {
+        res[value.level] = { diff: value.level, rating: 0 };
+        level_progress_list.push(res[value.level])
+    }
+    res[value.level].rating += parseInt(value.rating);
+    return res;
+  }, {});
+  for (var i = 0; i < level_progress_list.length; i++) {
+    level_progress[level_progress_list[i].diff] = level_progress_list[i].rating;
+  }
 
-	// Add Stat images
-	stat_css = `
-	.summary_panel {
-		z-index: 1;
-	    height: 175px;
-	    border-radius: 0.5em;
-	    position: relative;
-	    padding: 1em;
-	    border: 2px solid rgba(255,255,255,.8);
-	    overflow: hidden;
-	    flex: 1;
-	    display: flex;
-	    flex-direction: column;
-	    /* background: rgba(0,0,0,.75); */
-	    /* opacity: 0.6; */
-	    background-size: cover;
-	    background-position: center;
-	    font-weight: 700;
-	    font-size: 1em;
-	    font-family: 'Pretendard';
-	    margin: 10px;
-	}
+  var skill_title_count = 0;
+  var boss_title_count = 0;
+  for (var i = 0; i < expert_titles.length; i++) {
+    switch(expert_titles[i].tier) {
+      case 'platinum':
+          title_style = 'style="font-weight: bolder; color: cyan;"';
+          break;
+      case 'gold':
+          title_style = 'style="font-weight: bolder; color: gold;"';
+          break;
+      case 'silver':
+        title_style = 'style="font-weight: bolder; color: silver;"';
+        break;
+        case 'bronze':
+        title_style = 'style="font-weight: bolder; color: orangered;"';
+        break;
+        default:
+        title_style = '';
+    }
+    switch(expert_titles[i].type) {
+      case 'rating':
+        current_level = expert_titles[i].level;
+        current_rating = level_progress[current_level] ? level_progress[current_level] : 0;
+        max_rating = parseInt(expert_titles[i].rating);
+        progress = Math.round((current_rating / max_rating) * 100);
+        if(progress >= 100) {
+          bar_bg = 'bg-success';
+        } else {
+          bar_bg = 'bg-danger';
+        }
+        $('#progress_table_body').append('<tr>' +
+          '<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
+          '<td>' + expert_titles[i].description + '</td>' +
+          '<td><div class="progress" style="position: relative;">' +
+            '<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
+              'aria-valuenow="' + current_rating + '" aria-valuemin="0" aria-valuemax="' + max_rating + '" style="width: ' + progress + '%"></div>' +
+            '<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + current_rating.toLocaleString() + '/' + max_rating.toLocaleString() + '</div>' +
+          '</div></td></tr>');
+          break;
+      case 'skill_collect':
+        $('#progress_table_body').append('<tr>' +
+          '<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
+          '<td>' + expert_titles[i].description + '</td>' +
+          '<td><div class="progress" style="position: relative;">' +
+            '<div id="progress_bar_' + expert_titles[i].collect_type + '" class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar"' +
+              'aria-valuenow="0" aria-valuemin="0" aria-valuemax="' + expert_titles[i].count + '" style="width: 0%"></div>' +
+            '<div id="progress_bar_' + expert_titles[i].collect_type + '_text" style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">0/' + expert_titles[i].count + '</div>' +
+          '</div></td><tr><input type="hidden" id="skill_count_' + expert_titles[i].collect_type + '" value="0">');
+        break;
+      case 'skill':
+        current_song = scores.find(o => o.name === expert_titles[i].song && o.level_text === expert_titles[i].diff);
+        if(current_song == undefined) {
+          current_song_score = 0;
+          score_text = 0;
+        } else {
+          current_song_score = current_song.score;
+          score_text = current_song.score_text;
+        }
+        progress = Math.round(parseInt(current_song_score) / 1000000 * 100);
+        if(current_song_score > 990000) {         
+          skill_title_count++;
+          bar_bg = 'bg-success';
 
-	.blur:before {
-		content: '';
-	    background-color: #000;
-	    opacity: 0.7;
-	    width: 100%;
-	    height: 100%;
-	    z-index: 1;
-	    position: absolute;
-	    top: 0;
-	    left: 0;
-	    -webkit-filter: blur(1px) brightness(0.5);
-	    -moz-filter: blur(1px) brightness(0.5);
-	    -ms-filter: blur(1px) brightness(0.5);
-	    -o-filter: blur(1px) brightness(0.5);
-	    filter: blur(1px) brightness(0.5);
-	}
+          skill_count = parseInt($('#skill_count_skill').val()) + 1;
+          $('#skill_count_skill').val(skill_count);
+          $('#progress_bar_skill').css('width', skill_count/60*100 + '%');
+          $('#progress_bar_skill_text').html(skill_count + '/60');
+          if(skill_count == 60) {
+            $('#progress_bar_skill').removeClass('bg-danger');
+            $('#progress_bar_skill').addClass('bg-success');
+          }
 
-	.badge-summary {
-	    font-size: x-large;
-	    line-height: 19px;
-	}`
 
-	var styleSheet = document.createElement("style")
-	styleSheet.innerText = stat_css
-	document.head.appendChild(styleSheet)
+          sub_skill_count = parseInt($('#skill_count_' + expert_titles[i].collect_type).val()) + 1;
+          $('#skill_count_' + expert_titles[i].collect_type).val(sub_skill_count);
+          $('#progress_bar_' + expert_titles[i].collect_type).css('width', sub_skill_count/10*100 + '%');
+          $('#progress_bar_' + expert_titles[i].collect_type + '_text').html(sub_skill_count + '/10');
+          if(sub_skill_count == 10) {
+            $('#progress_bar_' + expert_titles[i].collect_type).removeClass('bg-danger');
+            $('#progress_bar_' + expert_titles[i].collect_type).addClass('bg-success');
+          }
+        } else {
+          bar_bg = 'bg-danger';
+        }
+        $('#progress_table_body').append('<tr>' +
+          '<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
+          '<td>' + expert_titles[i].description + '</td>' +
+          '<td><div class="progress" style="position: relative;">' +
+            '<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
+              'aria-valuenow="' + current_song_score + '" aria-valuemin="0" aria-valuemax="1000000" style="width: ' + progress + '%"></div>' +
+            '<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + score_text + '/1,000,000</div>' +
+          '</div></td>');
+        break;
+      case 'boss':
+        current_song = scores.find(o => o.name === expert_titles[i].song && o.level_text === expert_titles[i].diff);
+        if(current_song == undefined) {
+          current_song_score = 0;
+          score_text = 0;
+          bar_bg = 'bg-danger';
+        } else {
+          boss_title_count++;
+          current_song_score = current_song.score;
+          score_text = current_song.score_text;
+          bar_bg = 'bg-success';
+        }
+        progress = Math.round(parseInt(current_song_score) / 1000000 * 100);
+        $('#progress_table_body').append('<tr>' +
+          '<td ' + title_style + '>' + expert_titles[i].name + '</td>' +
+          '<td>' + expert_titles[i].description + '</td>' +
+          '<td><div class="progress" style="position: relative;">' +
+            '<div class="progress-bar ' + bar_bg + ' progress-bar-striped progress-bar-animated" role="progressbar"' +
+              'aria-valuenow="' + current_song_score + '" aria-valuemin="0" aria-valuemax="1000000" style="width: ' + progress + '%"></div>' +
+            '<div style="position: absolute; text-align: center; line-height: 20px; overflow: hidden; color: black; right: 0; left: 0; top: 0;">' + score_text + '/1,000,000</div>' +
+          '</div></td>');
+        break;
+      default:
+        continue;         
+    }
+  }
 
-	$('.pageWrap').prepend('<div id="summary_pane"><h1 style="color:white">Summary</h1><table id="summary_table" class="table"></table></div><hr>');
-	$('#summary_pane').append('<thead><tr><th id="summary_info" colspan="5"></th></tr></thead><tbody id="summary_detail"></tbody>');
+  scores.sort(SortByRating);
 
-	var single_song_scores = $.grep(scores, function(s) {
-	    return s.level_type != 'coop';
-	});
-	single_song_scores.sort(SortByRating);
-	var max_all_rating = single_song_scores.length < 50 ? single_song_scores.length : 50;
-	var items_per_row = 5;
-	var panel_html;
-	for (var i = 0; i < max_all_rating; i++) {
-		if(i % 5 == 0) {
-			panel_html += '<tr>';
-		}
+  // Add Stat images
+  stat_css = `
+  .summary_panel {
+    z-index: 1;
+      height: 175px;
+      border-radius: 0.5em;
+      position: relative;
+      padding: 1em;
+      border: 2px solid rgba(255,255,255,.8);
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      /* background: rgba(0,0,0,.75); */
+      /* opacity: 0.6; */
+      background-size: cover;
+      background-position: center;
+      font-weight: 700;
+      font-size: 1em;
+      font-family: 'Pretendard';
+      margin: 10px;
+  }
 
-		song_name = single_song_scores[i].name;
-		song_level_type = single_song_scores[i].level_type == 'single' ? 'danger' : 'success';
-		song_level_text = single_song_scores[i].level_text;
-		song_score_text = single_song_scores[i].score_text;
-		song_score_rate_text = single_song_scores[i].score_rate_text;
-		song_rating = single_song_scores[i].rating;
-		bg_url = pump_bg[song_name];
+  .blur:before {
+    content: '';
+      background-color: #000;
+      opacity: 0.7;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      -webkit-filter: blur(1px) brightness(0.5);
+      -moz-filter: blur(1px) brightness(0.5);
+      -ms-filter: blur(1px) brightness(0.5);
+      -o-filter: blur(1px) brightness(0.5);
+      filter: blur(1px) brightness(0.5);
+  }
 
-		// var bg_url = 'https://piugame.com/data/song_img/1234e492a6a6edd6278007705181d137.png?v=20231221112906';
-		panel_html += '<td><div class="blur summary_panel" style="background-image: url(' + bg_url + ');">'
-						+ '<div class="con con1" style="z-index: 3;"><div class="inn"><div class="song_name flex"><p style="margin-bottom: 0.25rem;color: white;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width: 200px; font-size: 20px;">'
-						+ song_name
-						+ '</p></div></div></div>'
-						+ '<div class="con con3" style="z-index: 3;margin-top: auto;"><div class="inn"><div class="tbl_w">'
+  .badge-summary {
+      font-size: x-large;
+      line-height: 19px;
+  }`
+
+  var styleSheet = document.createElement("style")
+  styleSheet.innerText = stat_css
+  document.head.appendChild(styleSheet)
+
+  $('.pageWrap').prepend('<div id="summary_pane"><h1 style="color:white">Summary</h1><table id="summary_table" class="table"></table></div><hr>');
+  $('#summary_pane').append('<thead><tr><th id="summary_info" colspan="5"></th></tr></thead><tbody id="summary_detail"></tbody>');
+
+  var single_song_scores = $.grep(scores, function(s) {
+      return s.level_type != 'coop';
+  });
+  single_song_scores.sort(SortByRating);
+  var max_all_rating = single_song_scores.length < 50 ? single_song_scores.length : 50;
+  var items_per_row = 5;
+  var panel_html;
+  for (var i = 0; i < max_all_rating; i++) {
+    if(i % 5 == 0) {
+      panel_html += '<tr>';
+    }
+
+    song_name = single_song_scores[i].name;
+    song_level_type = single_song_scores[i].level_type == 'single' ? 'danger' : 'success';
+    song_level_text = single_song_scores[i].level_text;
+    song_score_text = single_song_scores[i].score_text;
+    song_score_rate_text = single_song_scores[i].score_rate_text;
+    song_rating = single_song_scores[i].rating;
+    bg_url = pump_bg[song_name];
+
+    // var bg_url = 'https://piugame.com/data/song_img/1234e492a6a6edd6278007705181d137.png?v=20231221112906';
+    panel_html += '<td><div class="blur summary_panel" style="background-image: url(' + bg_url + ');">'
+            + '<div class="con con1" style="z-index: 3;"><div class="inn"><div class="song_name flex"><p style="margin-bottom: 0.25rem;color: white;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width: 200px; font-size: 20px;">'
+            + song_name
+            + '</p></div></div></div>'
+            + '<div class="con con3" style="z-index: 3;margin-top: auto;"><div class="inn"><div class="tbl_w">'
                         + '<table width="100%" border="0" cellspacing="0" cellpadding="0" class="board_st ac recently_play">'
                         + '<tbody><tr style="vertical-align: bottom;">'
                         + '<td class="fontCol fontCol1" style="background: rgba(0,0,0,0) !important; text-align: left;padding: 0;">'
@@ -361,140 +361,140 @@ function createAnalytic(scores) {
                         + '<tr style="vertical-align: bottom;">'
                         + '<td class="fontCol fontCol1" style="background: rgba(0,0,0,0) !important; text-align: left;padding: 0;">'
                         + '<div class="tx" style="font-size: 28px;"><img src="' + rating_image[song_score_rate_text] + '" style="height:40px"></div></td>'
-						+ '<td class="fontCol fontCol5" style="background: rgba(0,0,0,0) !important; text-align: right;padding: 0;">'
-						+ '<div class="tx" style="font-size: 38px;line-height: 28px;">' + song_rating + '</div></td></tr>'
+            + '<td class="fontCol fontCol5" style="background: rgba(0,0,0,0) !important; text-align: right;padding: 0;">'
+            + '<div class="tx" style="font-size: 38px;line-height: 28px;">' + song_rating + '</div></td></tr>'
                         + '</tbody></table></div></div></div></div></td>';
 
-		if(i % 5 == 4 || i == max_all_rating - 1) {
-			panel_html += '</tr>';
-		}		
-	}
-	$('#summary_detail').append(panel_html);
+    if(i % 5 == 4 || i == max_all_rating - 1) {
+      panel_html += '</tr>';
+    }   
+  }
+  $('#summary_detail').append(panel_html);
 
-	// Add Stat widgets
-	$('.pageWrap').prepend('<div id="widget-pane" class="row"><h1 style="color:white">Stats</h1></div><hr>');
+  // Add Stat widgets
+  $('.pageWrap').prepend('<div id="widget-pane" class="row"><h1 style="color:white">Stats</h1></div><hr>');
 
-	var single_song_scores_single = $.grep(scores, function(s) {
-	    return s.level_type == 'single';
-	});
-	single_song_scores_single.sort(SortByRating);
-	var single_song_scores_double = $.grep(scores, function(s) {
-	    return s.level_type == 'double';
-	});
-	single_song_scores_double.sort(SortByRating);
+  var single_song_scores_single = $.grep(scores, function(s) {
+      return s.level_type == 'single';
+  });
+  single_song_scores_single.sort(SortByRating);
+  var single_song_scores_double = $.grep(scores, function(s) {
+      return s.level_type == 'double';
+  });
+  single_song_scores_double.sort(SortByRating);
 
-	var new_song_scores = $.grep(scores, function(s) {
-	    return new_songs.indexOf(s.name) >= 0 && s.level_type != 'coop';
-	});
-	new_song_scores.sort(SortByRating);
-	var new_song_scores_single = $.grep(scores, function(s) {
-	    return new_songs.indexOf(s.name) >= 0 && s.level_type == 'single';
-	});
-	new_song_scores_single.sort(SortByRating);
-	var new_song_scores_double = $.grep(scores, function(s) {
-	    return new_songs.indexOf(s.name) >= 0 && s.level_type == 'double';
-	});
-	new_song_scores_double.sort(SortByRating);
+  var new_song_scores = $.grep(scores, function(s) {
+      return new_songs.indexOf(s.name) >= 0 && s.level_type != 'coop';
+  });
+  new_song_scores.sort(SortByRating);
+  var new_song_scores_single = $.grep(scores, function(s) {
+      return new_songs.indexOf(s.name) >= 0 && s.level_type == 'single';
+  });
+  new_song_scores_single.sort(SortByRating);
+  var new_song_scores_double = $.grep(scores, function(s) {
+      return new_songs.indexOf(s.name) >= 0 && s.level_type == 'double';
+  });
+  new_song_scores_double.sort(SortByRating);
 
-	var all_rating = 0;
-	// var max_all_rating = single_song_scores.length < 50 ? single_song_scores.length : 50;
-	for (var i = 0; i < max_all_rating; i++) {
-		all_rating += single_song_scores[i].rating;
-	}
+  var all_rating = 0;
+  // var max_all_rating = single_song_scores.length < 50 ? single_song_scores.length : 50;
+  for (var i = 0; i < max_all_rating; i++) {
+    all_rating += single_song_scores[i].rating;
+  }
 
-	var all_rating_single = 0;
-	var max_all_rating_single = single_song_scores_single.length < 50 ? single_song_scores_single.length : 50;
-	for (var i = 0; i < max_all_rating_single; i++) {
-		all_rating_single += single_song_scores_single[i].rating;
-	}
-	var all_rating_double = 0;
-	var max_all_rating_double = single_song_scores_double.length < 50 ? single_song_scores_double.length : 50;
-	for (var i = 0; i < max_all_rating_double; i++) {
-		all_rating_double += single_song_scores_double[i].rating;
-	}
+  var all_rating_single = 0;
+  var max_all_rating_single = single_song_scores_single.length < 50 ? single_song_scores_single.length : 50;
+  for (var i = 0; i < max_all_rating_single; i++) {
+    all_rating_single += single_song_scores_single[i].rating;
+  }
+  var all_rating_double = 0;
+  var max_all_rating_double = single_song_scores_double.length < 50 ? single_song_scores_double.length : 50;
+  for (var i = 0; i < max_all_rating_double; i++) {
+    all_rating_double += single_song_scores_double[i].rating;
+  }
 
-	var new_rating = 0;
-	var max_new_rating = new_song_scores.length < 20 ? new_song_scores.length : 20;
-	for (var i = 0; i < max_new_rating; i++) {
-		new_rating += new_song_scores[i].rating;
-	}
+  var new_rating = 0;
+  var max_new_rating = new_song_scores.length < 20 ? new_song_scores.length : 20;
+  for (var i = 0; i < max_new_rating; i++) {
+    new_rating += new_song_scores[i].rating;
+  }
 
-	var new_rating_single = 0;
-	var max_new_rating_single = new_song_scores_single.length < 20 ? new_song_scores_single.length : 20;
-	for (var i = 0; i < max_new_rating_single; i++) {
-		new_rating_single += new_song_scores_single[i].rating;
-	}
-	var new_rating_double = 0;
-	var max_new_rating_double = new_song_scores_double.length < 20 ? new_song_scores_double.length : 20;
-	for (var i = 0; i < max_new_rating_double; i++) {
-		new_rating_double += new_song_scores_double[i].rating;
-	}
+  var new_rating_single = 0;
+  var max_new_rating_single = new_song_scores_single.length < 20 ? new_song_scores_single.length : 20;
+  for (var i = 0; i < max_new_rating_single; i++) {
+    new_rating_single += new_song_scores_single[i].rating;
+  }
+  var new_rating_double = 0;
+  var max_new_rating_double = new_song_scores_double.length < 20 ? new_song_scores_double.length : 20;
+  for (var i = 0; i < max_new_rating_double; i++) {
+    new_rating_double += new_song_scores_double[i].rating;
+  }
 
-	var max_skill_title_count = $.grep(expert_titles, function(s) {
-	    return s.type == 'skill';
-	}).length;
-	var max_boss_title_count = $.grep(expert_titles, function(s) {
-	    return s.type == 'boss';
-	}).length;
+  var max_skill_title_count = $.grep(expert_titles, function(s) {
+      return s.type == 'skill';
+  }).length;
+  var max_boss_title_count = $.grep(expert_titles, function(s) {
+      return s.type == 'boss';
+  }).length;
 
-	var widget_info = [
-		{
-			label: "All Time Rating",
-			label_class: "bg-primary",
-			score: all_rating.toLocaleString(),
-			description: "Top 50 Score Rating"
-		},
-		{
-			label: "All Time Rating (Single)",
-			label_class: "bg-danger",
-			score: all_rating_single.toLocaleString(),
-			description: "Top 50 Score Rating (Single)"
-		},
-		{
-			label: "All Time Rating (Double)",
-			label_class: "bg-success",
-			score: all_rating_double.toLocaleString(),
-			description: "Top 50 Score Rating (Double)"
-		},
-		{
-			label: "Skill Title Count",
-			label_class: "bg-secondary",
-			score: skill_title_count + '/' + max_skill_title_count,
-			description: "Number of Skill titles"
-		},
-		{
-			label: "New Song Rating",
-			label_class: "bg-primary",
-			score: new_rating.toLocaleString(),
-			description: "Top 20 New Song Score Rating"
-		},
-		{
-			label: "New Song Rating (Single)",
-			label_class: "bg-danger",
-			score: new_rating_single.toLocaleString(),
-			description: "Top 20 New Song Score Rating (Single)"
-		},
-		{
-			label: "New Song Rating (Double)",
-			label_class: "bg-success",
-			score: new_rating_double.toLocaleString(),
-			description: "Top 20 New Song Score Rating (Double)"
-		},
-		{
-			label: "Boss Breaker Title Count",
-			label_class: "bg-secondary",
-			score: boss_title_count + '/' + max_boss_title_count,
-			description: "Number of Boss Breaker titles"
-		}
-	]
+  var widget_info = [
+    {
+      label: "All Time Rating",
+      label_class: "bg-primary",
+      score: all_rating.toLocaleString(),
+      description: "Top 50 Score Rating"
+    },
+    {
+      label: "All Time Rating (Single)",
+      label_class: "bg-danger",
+      score: all_rating_single.toLocaleString(),
+      description: "Top 50 Score Rating (Single)"
+    },
+    {
+      label: "All Time Rating (Double)",
+      label_class: "bg-success",
+      score: all_rating_double.toLocaleString(),
+      description: "Top 50 Score Rating (Double)"
+    },
+    {
+      label: "Skill Title Count",
+      label_class: "bg-secondary",
+      score: skill_title_count + '/' + max_skill_title_count,
+      description: "Number of Skill titles"
+    },
+    {
+      label: "New Song Rating",
+      label_class: "bg-primary",
+      score: new_rating.toLocaleString(),
+      description: "Top 20 New Song Score Rating"
+    },
+    {
+      label: "New Song Rating (Single)",
+      label_class: "bg-danger",
+      score: new_rating_single.toLocaleString(),
+      description: "Top 20 New Song Score Rating (Single)"
+    },
+    {
+      label: "New Song Rating (Double)",
+      label_class: "bg-success",
+      score: new_rating_double.toLocaleString(),
+      description: "Top 20 New Song Score Rating (Double)"
+    },
+    {
+      label: "Boss Breaker Title Count",
+      label_class: "bg-secondary",
+      score: boss_title_count + '/' + max_boss_title_count,
+      description: "Number of Boss Breaker titles"
+    }
+  ]
 
-	for (var i = 0; i < widget_info.length; i++) {
-		let item = widget_info[i];
-		$('#widget-pane').append('<div class="col-md-3" style="padding: 20px"><div class="card"><div class="card-body"><div class="lead"><span class="mb-1 badge badge-pill ' + item.label_class + '">' + item.label + '</span></div><h2 class="card-title">' + item.score + '</h2><p class="small text-muted">' + item.description + '</p></div></div></div>');
-	}
+  for (var i = 0; i < widget_info.length; i++) {
+    let item = widget_info[i];
+    $('#widget-pane').append('<div class="col-md-3" style="padding: 20px"><div class="card"><div class="card-body"><div class="lead"><span class="mb-1 badge badge-pill ' + item.label_class + '">' + item.label + '</span></div><h2 class="card-title">' + item.score + '</h2><p class="small text-muted">' + item.description + '</p></div></div></div>');
+  }
 
-	var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores));
-	$('.pageWrap').prepend('<a href="data:' + data + '" class="btn btn-info" download="data.json">Download Scores</a><hr>');
+  var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores));
+  $('.pageWrap').prepend('<a href="data:' + data + '" class="btn btn-info" download="data.json">Download Scores</a><hr>');
 }
 
 function SortByRating(a, b){
@@ -504,325 +504,325 @@ function SortByRating(a, b){
 }
 
 async function fetchScores(url) {
-	dom = await fetchPage(url);
-	const rows = dom.querySelectorAll('.my_best_scoreList .in');
-	songs = [];
-	for (var i = 0; i < rows.length; i++) {
-		song = $(dom.querySelectorAll('.my_best_scoreList .in .song_name p')[i]).html();
-		score = $(dom.querySelectorAll('.my_best_scoreList .in .num')[i]).html();
-		score_rate = $(dom.querySelectorAll('.my_best_scoreList .in .etc_con .img:not(.st1) img')[i]).attr('src');
-		score_rate = score_rate.split('/grade/')[1].split('.png')[0];
+  dom = await fetchPage(url);
+  const rows = dom.querySelectorAll('.my_best_scoreList .in');
+  songs = [];
+  for (var i = 0; i < rows.length; i++) {
+    song = $(dom.querySelectorAll('.my_best_scoreList .in .song_name p')[i]).html();
+    score = $(dom.querySelectorAll('.my_best_scoreList .in .num')[i]).html();
+    score_rate = $(dom.querySelectorAll('.my_best_scoreList .in .etc_con .img:not(.st1) img')[i]).attr('src');
+    score_rate = score_rate.split('/grade/')[1].split('.png')[0];
 
-		score_plate = $(dom.querySelectorAll('.my_best_scoreList .in .etc_con .st1 img')[i]).attr('src');
-		score_plate = score_plate.split('/plate/')[1].split('.png')[0];
+    score_plate = $(dom.querySelectorAll('.my_best_scoreList .in .etc_con .st1 img')[i]).attr('src');
+    score_plate = score_plate.split('/plate/')[1].split('.png')[0];
 
-		level_type_data = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).attr('style').split('full/')[1].split('_bg')[0];
-		switch(level_type_data) {
-			case 's':
-			    level_type = 'single';
-			    break;
-			case 'd':
-			    level_type = 'double';
-			    break;
-			default:
-			level_type = 'coop';
-		}
+    level_type_data = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).attr('style').split('full/')[1].split('_bg')[0];
+    switch(level_type_data) {
+      case 's':
+          level_type = 'single';
+          break;
+      case 'd':
+          level_type = 'double';
+          break;
+      default:
+      level_type = 'coop';
+    }
 
-		level = '';
-		levels = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[0]).find('.imG');
+    level = '';
+    levels = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[0]).find('.imG');
 
-		switch(level_type_data) {
-			case 's':
-			case 'd':
-				for (var j = 0; j < levels.length; j++) {
-					url = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).find('.imG img').eq(j).attr('src');
-					level += url.split('num_')[1].split('.png')[0];
-				}
-				rating = calculateRating(level, rating_text[score_rate], 'normal');
-				level_text = level_type_data + level;
-				level_text = level_text.toUpperCase();
-				break;
-			default:
-			    url = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).find('.imG img').eq(1).attr('src');
-				level = url.split('num_')[1].split('.png')[0];
-				rating = calculateRating(null, rating_text[score_rate], 'coop');
-				level_text = 'Cx' + level;
-		}
+    switch(level_type_data) {
+      case 's':
+      case 'd':
+        for (var j = 0; j < levels.length; j++) {
+          url = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).find('.imG img').eq(j).attr('src');
+          level += url.split('num_')[1].split('.png')[0];
+        }
+        rating = calculateRating(level, rating_text[score_rate], 'normal');
+        level_text = level_type_data + level;
+        level_text = level_text.toUpperCase();
+        break;
+      default:
+          url = $(dom.querySelectorAll('.my_best_scoreList .in .stepBall_in')[i]).find('.imG img').eq(1).attr('src');
+        level = url.split('num_')[1].split('.png')[0];
+        rating = calculateRating(null, rating_text[score_rate], 'coop');
+        level_text = 'Cx' + level;
+    }
 
-		if(level == 'xx' || level == 'x') {
-			continue;
-		} else {
-			song = {
-				name: song,
-				level_text: level_text,
-				score_text: score,
-				score_rate_text: rating_text[score_rate],
-				rating: rating,
-				score_plate_text: plate_text[score_plate],
-				level_type: level_type,
-				level: level,
-				score: score.replaceAll(',',''),
-				score_rate: score_rate,
-				score_plate: score_plate,
-			}
+    if(level == 'xx' || level == 'x') {
+      continue;
+    } else {
+      song = {
+        name: song,
+        level_text: level_text,
+        score_text: score,
+        score_rate_text: rating_text[score_rate],
+        rating: rating,
+        score_plate_text: plate_text[score_plate],
+        level_type: level_type,
+        level: level,
+        score: score.replaceAll(',',''),
+        score_rate: score_rate,
+        score_plate: score_plate,
+      }
 
-			songs.push(song);
-		}
-	}
+      songs.push(song);
+    }
+  }
 
-	songs.sort(function(a, b){
-	    var a1 = a.rating, b1 = b.rating;
-	    if(a1 == b1) {
-		var a2 = a.score, b2 = b.score;
-		    if(a2 == b2) {			    	
-			return 0;
-		    }	
-		return a2 > b2 ? -1 : 1;
-	    }
-	    return a1 > b1 ? -1 : 1;
-	});
+  songs.sort(function(a, b){
+      var a1 = a.rating, b1 = b.rating;
+      if(a1 == b1) {
+    var a2 = a.score, b2 = b.score;
+        if(a2 == b2) {            
+      return 0;
+        } 
+    return a2 > b2 ? -1 : 1;
+      }
+      return a1 > b1 ? -1 : 1;
+  });
 
-	return songs;
+  return songs;
 }
 
 async function fetchPage(url) {
-	const response = await fetch(url, {redirect: 'error'});
-	const html = await response.text();
-	const parser = new DOMParser();
-	return parser.parseFromString(html, 'text/html');
+  const response = await fetch(url, {redirect: 'error'});
+  const html = await response.text();
+  const parser = new DOMParser();
+  return parser.parseFromString(html, 'text/html');
 }
 
 function calculateRating(level, rate, type) {
-	rate_index = {
-		'F':0.4,
-		'D':0.5,
-		'C':0.6,
-		'B':0.7,
-		'A':0.8,
-		'A+':0.9,
-		'AA':1,
-		'AA+':1.05,
-		'AAA':1.1,
-		'AAA+':1.15,
-		'S':1.2,
-		'S+':1.26,
-		'SS':1.32,
-		'SS+':1.38,
-		'SSS':1.44,
-		'SSS+':1.5,
-	};
+  rate_index = {
+    'F':0.4,
+    'D':0.5,
+    'C':0.6,
+    'B':0.7,
+    'A':0.8,
+    'A+':0.9,
+    'AA':1,
+    'AA+':1.05,
+    'AAA':1.1,
+    'AAA+':1.15,
+    'S':1.2,
+    'S+':1.26,
+    'SS':1.32,
+    'SS+':1.38,
+    'SSS':1.44,
+    'SSS+':1.5,
+  };
 
-	if(type == 'normal') {
-		level_base = {
-			'10':100,
-			'11':110,
-			'12':130,
-			'13':160,
-			'14':200,
-			'15':250,
-			'16':310,
-			'17':380,
-			'18':460,
-			'19':550,
-			'20':650,
-			'21':760,
-			'22':880,
-			'23':1010,
-			'24':1150,
-			'25':1300,
-			'26':1460,
-			'27':1630,
-			'28':1810,
-		};
-		if(level < 10) return 0;
-		rating = parseInt(level_base[level]) * parseFloat(rate_index[rate]);
-	} else if(type == 'coop') {
-		level_base = 2000;
-		rating = parseInt(level_base) * parseFloat(rate_index[rate]);
-	}
-	return Math.round(rating.toFixed(2));
+  if(type == 'normal') {
+    level_base = {
+      '10':100,
+      '11':110,
+      '12':130,
+      '13':160,
+      '14':200,
+      '15':250,
+      '16':310,
+      '17':380,
+      '18':460,
+      '19':550,
+      '20':650,
+      '21':760,
+      '22':880,
+      '23':1010,
+      '24':1150,
+      '25':1300,
+      '26':1460,
+      '27':1630,
+      '28':1810,
+    };
+    if(level < 10) return 0;
+    rating = parseInt(level_base[level]) * parseFloat(rate_index[rate]);
+  } else if(type == 'coop') {
+    level_base = 2000;
+    rating = parseInt(level_base) * parseFloat(rate_index[rate]);
+  }
+  return Math.round(rating.toFixed(2));
 }
 
 const rating_text = {
-	'sss_p': 'SSS+',
-	'sss': 'SSS',
-	'ss_p': 'SS+',
-	'ss': 'SS',
-	's_p': 'S+',
-	's': 'S',
-	'aaa_p': 'AAA+',
-	'aaa': 'AAA',
-	'aa_p': 'AA+',
-	'aa': 'AA',
-	'a_p': 'A+',
-	'a': 'A',
-	'b': 'B',
-	'c': 'C',
-	'd': 'D',
-	'f': 'F',
+  'sss_p': 'SSS+',
+  'sss': 'SSS',
+  'ss_p': 'SS+',
+  'ss': 'SS',
+  's_p': 'S+',
+  's': 'S',
+  'aaa_p': 'AAA+',
+  'aaa': 'AAA',
+  'aa_p': 'AA+',
+  'aa': 'AA',
+  'a_p': 'A+',
+  'a': 'A',
+  'b': 'B',
+  'c': 'C',
+  'd': 'D',
+  'f': 'F',
 };
 const rating_image = {
-	'SSS+':'https://piugame.com/l_img/grade/sss_p.png',
-	'SSS':'https://piugame.com/l_img/grade/sss.png',
-	'SS+':'https://piugame.com/l_img/grade/ss_p.png',
-	'SS':'https://piugame.com/l_img/grade/ss.png',
-	'S+':'https://piugame.com/l_img/grade/s_p.png',
-	'S':'https://piugame.com/l_img/grade/s.png',
-	'AAA+':'https://piugame.com/l_img/grade/aaa_p.png',
-	'AAA':'https://piugame.com/l_img/grade/aaa.png',
-	'AA+':'https://piugame.com/l_img/grade/aa_p.png',
-	'AA':'https://piugame.com/l_img/grade/aa.png',
-	'A+':'https://piugame.com/l_img/grade/a_p.png',
-	'A':'https://piugame.com/l_img/grade/a.png',
-	'B':'https://piugame.com/l_img/grade/b.png',
-	'C':'https://piugame.com/l_img/grade/c.png',
-	'D':'https://piugame.com/l_img/grade/d.png',
-	'F':'https://piugame.com/l_img/grade/f.png',
+  'SSS+':'https://piugame.com/l_img/grade/sss_p.png',
+  'SSS':'https://piugame.com/l_img/grade/sss.png',
+  'SS+':'https://piugame.com/l_img/grade/ss_p.png',
+  'SS':'https://piugame.com/l_img/grade/ss.png',
+  'S+':'https://piugame.com/l_img/grade/s_p.png',
+  'S':'https://piugame.com/l_img/grade/s.png',
+  'AAA+':'https://piugame.com/l_img/grade/aaa_p.png',
+  'AAA':'https://piugame.com/l_img/grade/aaa.png',
+  'AA+':'https://piugame.com/l_img/grade/aa_p.png',
+  'AA':'https://piugame.com/l_img/grade/aa.png',
+  'A+':'https://piugame.com/l_img/grade/a_p.png',
+  'A':'https://piugame.com/l_img/grade/a.png',
+  'B':'https://piugame.com/l_img/grade/b.png',
+  'C':'https://piugame.com/l_img/grade/c.png',
+  'D':'https://piugame.com/l_img/grade/d.png',
+  'F':'https://piugame.com/l_img/grade/f.png',
 };
 const plate_text = {
-	'pg': 'PERFECT GAME',
-	'ug': 'ULTIMATE GAME',
-	'eg': 'EXTREME GAME',
-	'sg': 'SUPERB GAME',
-	'mg': 'MARVELOUS GAME',
-	'tg': 'TALENTED GAME',
-	'fg': 'FAIR GAME',
-	'rg': 'ROUGH GAME'
+  'pg': 'PERFECT GAME',
+  'ug': 'ULTIMATE GAME',
+  'eg': 'EXTREME GAME',
+  'sg': 'SUPERB GAME',
+  'mg': 'MARVELOUS GAME',
+  'tg': 'TALENTED GAME',
+  'fg': 'FAIR GAME',
+  'rg': 'ROUGH GAME'
 };
 const expert_titles = [
-	{name: 'THE MASTER',description: '[Lv.28] 1,900 rating',tier: 'platinum',type: 'rating',level: '28',rating: '1900'},
-	{name: 'EXPERT Lv.10',description: '[Lv.27] 7,000 rating',tier: 'platinum',type: 'rating',level: '27',rating: '7000'},
-	{name: 'EXPERT Lv.9',description: '[Lv.27] 3,500 rating',tier: 'gold',type: 'rating',level: '27',rating: '3500'},
-	{name: 'EXPERT Lv.8',description: '[Lv.26] 26,000 rating',tier: 'gold',type: 'rating',level: '26',rating: '26000'},
-	{name: 'EXPERT Lv.7',description: '[Lv.26] 13,000 rating',tier: 'gold',type: 'rating',level: '26',rating: '13000'},
-	{name: 'EXPERT Lv.6',description: '[Lv.25] 40,000 rating',tier: 'gold',type: 'rating',level: '25',rating: '40000'},
-	{name: 'EXPERT Lv.5',description: '[Lv.25] 20,000 rating',tier: 'gold',type: 'rating',level: '25',rating: '20000'},
-	{name: 'EXPERT Lv.4',description: '[Lv.24] 60,000 rating',tier: 'gold',type: 'rating',level: '24',rating: '60000'},
-	{name: 'EXPERT Lv.3',description: '[Lv.24] 30,000 rating',tier: 'gold',type: 'rating',level: '24',rating: '30000'},
-	{name: 'EXPERT Lv.2',description: '[Lv.23] 80,000 rating',tier: 'gold',type: 'rating',level: '23',rating: '80000'},
-	{name: 'EXPERT Lv.1',description: '[Lv.23] 40,000 rating',tier: 'gold',type: 'rating',level: '23',rating: '40000'},
-	{name: 'ADVANCED Lv.10',description: '[Lv.22] 70,000 rating',tier: 'silver',type: 'rating',level: '22',rating: '70000'},
-	{name: 'ADVANCED Lv.9',description: '[Lv.22] 52,500 rating',tier: 'silver',type: 'rating',level: '22',rating: '52500'},
-	{name: 'ADVANCED Lv.8',description: '[Lv.22] 35,000 rating',tier: 'silver',type: 'rating',level: '22',rating: '35000'},
-	{name: 'ADVANCED Lv.7',description: '[Lv.22] 17,500 rating',tier: 'silver',type: 'rating',level: '22',rating: '17500'},
-	{name: 'ADVANCED Lv.6',description: '[Lv.21] 45,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '45000'},
-	{name: 'ADVANCED Lv.5',description: '[Lv.21] 30,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '30000'},
-	{name: 'ADVANCED Lv.4',description: '[Lv.21] 15,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '15000'},
-	{name: 'ADVANCED Lv.3',description: '[Lv.20] 39,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '39000'},
-	{name: 'ADVANCED Lv.2',description: '[Lv.20] 26,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '26000'},
-	{name: 'ADVANCED Lv.1',description: '[Lv.20] 13,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '13000'},
-	{name: 'INTERMEDIATE Lv.10',description: '[Lv.19] 11,000 rating',tier: 'bronze',type: 'rating',level: '19',rating: '11000'},
-	{name: 'INTERMEDIATE Lv.9',description: '[Lv.18] 9,200 rating',tier: 'bronze',type: 'rating',level: '18',rating: '9200'},
-	{name: 'INTERMEDIATE Lv.8',description: '[Lv.17] 7,600 rating',tier: 'bronze',type: 'rating',level: '17',rating: '7600'},
-	{name: 'INTERMEDIATE Lv.7',description: '[Lv.16] 6,200 rating',tier: 'bronze',type: 'rating',level: '16',rating: '6200'},
-	{name: 'INTERMEDIATE Lv.6',description: '[Lv.15] 5,000 rating',tier: 'bronze',type: 'rating',level: '15',rating: '5000'},
-	{name: 'INTERMEDIATE Lv.5',description: '[Lv.14] 4,000 rating',tier: 'bronze',type: 'rating',level: '14',rating: '4000'},
-	{name: 'INTERMEDIATE Lv.4',description: '[Lv.13] 3,200 rating',tier: 'bronze',type: 'rating',level: '13',rating: '3200'},
-	{name: 'INTERMEDIATE Lv.3',description: '[Lv.12] 2,600 rating',tier: 'bronze',type: 'rating',level: '12',rating: '2600'},
-	{name: 'INTERMEDIATE Lv.2',description: '[Lv.11] 2,200 rating',tier: 'bronze',type: 'rating',level: '11',rating: '2200'},
-	{name: 'INTERMEDIATE Lv.1',description: '[Lv.10] 2,000 rating',tier: 'bronze',type: 'rating',level: '10',rating: '2000'},
-	{name: 'SPECIALIST',description: 'All skill titles',tier: 'platinum',type: 'skill_collect',collect_type: 'skill',count: 60},
-	{name: '[BRACKET] EXPERT',description: 'All Bracket titles',tier: 'platinum',type: 'skill_collect',collect_type: 'bracket',count: 10},
-	{name: '[BRACKET] Lv.10',description: 'Phalanx D24',tier: 'platinum',type: 'skill',collect_type: 'bracket',song: 'Phalanx',diff: 'D24'},
-	{name: '[BRACKET] Lv.9',description: 'Scorpion King D23',tier: 'platinum',type: 'skill',collect_type: 'bracket',song: 'Scorpion King',diff: 'D23'},
-	{name: '[BRACKET] Lv.8',description: 'Pop Sequence D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'Pop Sequence',diff: 'D23'},
-	{name: '[BRACKET] Lv.7',description: 'What Happened D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'D23'},
-	{name: '[BRACKET] Lv.6',description: 'Meteo5cience D22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D22'},
-	{name: '[BRACKET] Lv.5',description: 'Phalanx S22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Phalanx',diff: 'S22'},
-	{name: '[BRACKET] Lv.4',description: 'What Happened S21',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'S21'},
-	{name: '[BRACKET] Lv.3',description: 'Meteo5cience D21',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D21'},
-	{name: '[BRACKET] Lv.2',description: 'Mad5cience S20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Mad5cience',diff: 'S20'},
-	{name: '[BRACKET] Lv.1',description: 'Allegro furioso D20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Allegro furioso',diff: 'D20'},
-	{name: '[HALF] EXPERT',description: 'All Half titles',tier: 'platinum',type: 'skill_collect',collect_type: 'half',count: 10},
-	{name: '[HALF] Lv.10',description: 'Imprinting D24',tier: 'platinum',type: 'skill',collect_type: 'half',song: 'Imprinting',diff: 'D24'},
-	{name: '[HALF] Lv.9',description: 'Love is a Danger Zone 2 Try To B.P.M D23',tier: 'platinum',type: 'skill',collect_type: 'half',song: 'Love is a Danger Zone 2 Try To B.P.M',diff: 'D23'},
-	{name: '[HALF] Lv.8',description: 'Redline D22',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Redline',diff: 'D22'},
-	{name: '[HALF] Lv.7',description: 'Witch Doctor #1 D21',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Witch Doctor #1',diff: 'D21'},
-	{name: '[HALF] Lv.6',description: 'Utsushiyo No Kaze D20',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Utsushiyo No Kaze',diff: 'D20'},
-	{name: '[HALF] Lv.5',description: 'Phantom D19',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Phantom',diff: 'D19'},
-	{name: '[HALF] Lv.4',description: 'Super Fantasy D18',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Super Fantasy',diff: 'D18'},
-	{name: '[HALF] Lv.3',description: 'Shub Niggurath D18',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Shub Niggurath',diff: 'D18'},
-	{name: '[HALF] Lv.2',description: 'Butterfly D17',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Butterfly',diff: 'D17'},
-	{name: '[HALF] Lv.1',description: 'Mopemope D17',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Mopemope',diff: 'D17'},
-	{name: '[GIMMICK] EXPERT',description: 'All Gimmick titles',tier: 'platinum',type: 'skill_collect',collect_type: 'gimmick',count: 10},
-	{name: '[GIMMICK] Lv.10',description: 'Everybody Got 2 Know S21',tier: 'platinum',type: 'skill',collect_type: 'gimmick',song: 'Everybody Got 2 Know',diff: 'S21'},
-	{name: '[GIMMICK] Lv.9',description: '8 6 S20',tier: 'platinum',type: 'skill',collect_type: 'gimmick',song: '8 6',diff: 'S20'},
-	{name: '[GIMMICK] Lv.8',description: 'Twist of Fate (feat. Ruriling) S19',tier: 'gold',type: 'skill',collect_type: 'gimmick',song: 'Twist of Fate (feat. Ruriling)',diff: 'S19'},
-	{name: '[GIMMICK] Lv.7',description: 'Nakakapagpabagabag S19',tier: 'gold',type: 'skill',collect_type: 'gimmick',song: 'Nakakapagpabagabag',diff: 'S19'},
-	{name: '[GIMMICK] Lv.6',description: 'Miss S\' story S19',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Miss S\' story',diff: 'S19'},
-	{name: '[GIMMICK] Lv.5',description: 'Rock the house - SHORT CUT - S18',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Rock the house - SHORT CUT -',diff: 'S18'},
-	{name: '[GIMMICK] Lv.4',description: 'Come to Me S17',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Come to Me',diff: 'S17'},
-	{name: '[GIMMICK] Lv.3',description: 'Ugly Dee S17',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: 'Ugly Dee',diff: 'S17'},
-	{name: '[GIMMICK] Lv.2',description: '8 6 S16',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: '8 6',diff: 'S16'},
-	{name: '[GIMMICK] Lv.1',description: 'Yeo rae a S13',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: 'Yeo rae a',diff: 'S13'},
-	{name: '[DRILL] EXPERT',description: 'All Drill titles',tier: 'platinum',type: 'skill_collect',collect_type: 'drill',count: 10},
-	{name: '[DRILL] Lv.10',description: 'WI-EX-DOC-VA D24',tier: 'platinum',type: 'skill',collect_type: 'drill',song: 'WI-EX-DOC-VA',diff: 'D24'},
-	{name: '[DRILL] Lv.9',description: 'Witch Doctor D23',tier: 'platinum',type: 'skill',collect_type: 'drill',song: 'Witch Doctor',diff: 'D23'},
-	{name: '[DRILL] Lv.8',description: 'Rock the house D22',tier: 'gold',type: 'skill',collect_type: 'drill',song: 'Rock the house',diff: 'D22'},
-	{name: '[DRILL] Lv.7',description: 'Sorceress Elise S21',tier: 'gold',type: 'skill',collect_type: 'drill',song: 'Sorceress Elise',diff: 'S21'},
-	{name: '[DRILL] Lv.6',description: 'Overblow S20',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Overblow',diff: 'S20'},
-	{name: '[DRILL] Lv.5',description: 'Vacuum S19',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Vacuum',diff: 'S19'},
-	{name: '[DRILL] Lv.4',description: 'Moonlight S18',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Moonlight',diff: 'S18'},
-	{name: '[DRILL] Lv.3',description: 'Gun Rock S17',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Gun Rock',diff: 'S17'},
-	{name: '[DRILL] Lv.2',description: 'Vook S16',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Vook',diff: 'S16'},
-	{name: '[DRILL] Lv.1',description: 'Hellfire S13',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Hellfire',diff: 'S13'},
-	{name: '[RUN] EXPERT',description: 'All Run titles',tier: 'platinum',type: 'skill_collect',collect_type: 'run',count: 10},
-	{name: '[RUN] Lv.10',description: 'Yog-Sothoth D24',tier: 'platinum',type: 'skill',collect_type: 'run',song: 'Yog-Sothoth',diff: 'D24'},
-	{name: '[RUN] Lv.9',description: 'Baroque Virus - FULL SONG - D23',tier: 'platinum',type: 'skill',collect_type: 'run',song: 'Baroque Virus - FULL SONG -',diff: 'D23'},
-	{name: '[RUN] Lv.8',description: 'Gargoyle - FULL SONG - D22',tier: 'gold',type: 'skill',collect_type: 'run',song: 'Gargoyle - FULL SONG -',diff: 'D22'},
-	{name: '[RUN] Lv.7',description: 'Sarabande D21',tier: 'gold',type: 'skill',collect_type: 'run',song: 'Sarabande',diff: 'D21'},
-	{name: '[RUN] Lv.6',description: 'Bee D20',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Bee',diff: 'D20'},
-	{name: '[RUN] Lv.5',description: 'Napalm S19',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Napalm',diff: 'S19'},
-	{name: '[RUN] Lv.4',description: 'Gothique Resonance S18',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Gothique Resonance',diff: 'S18'},
-	{name: '[RUN] Lv.3',description: 'Pavane S17',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Pavane',diff: 'S17'},
-	{name: '[RUN] Lv.2',description: 'Super Fantasy S16',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Super Fantasy',diff: 'S16'},
-	{name: '[RUN] Lv.1',description: 'Switronic S13',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Switronic',diff: 'S13'},
-	{name: '[TWIST] EXPERT',description: 'All Twist titles',tier: 'platinum',type: 'skill_collect',collect_type: 'twist',count: 10},
-	{name: '[TWIST] Lv.10',description: 'Bee D24',tier: 'platinum',type: 'skill',collect_type: 'twist',song: 'Bee',diff: 'D24'},
-	{name: '[TWIST] Lv.9',description: 'Love Is A Danger Zone(Cranky Mix) D23',tier: 'platinum',type: 'skill',collect_type: 'twist',song: 'Love Is A Danger Zone(Cranky Mix)',diff: 'D23'},
-	{name: '[TWIST] Lv.8',description: 'Super Fantasy D22',tier: 'gold',type: 'skill',collect_type: 'twist',song: 'Super Fantasy',diff: 'D22'},
-	{name: '[TWIST] Lv.7',description: 'Love is a Danger Zone D21',tier: 'gold',type: 'skill',collect_type: 'twist',song: 'Love is a Danger Zone',diff: 'D21'},
-	{name: '[TWIST] Lv.6',description: 'Witch Doctor #1 D20',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'Witch Doctor #1',diff: 'D20'},
-	{name: '[TWIST] Lv.5',description: 'U GOT 2 KNOW S19',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'U GOT 2 KNOW',diff: 'S19'},
-	{name: '[TWIST] Lv.4',description: 'Solitary 2 S18',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'Solitary 2',diff: 'S18'},
-	{name: '[TWIST] Lv.3',description: 'U Got Me Rocking S17',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'U Got Me Rocking',diff: 'S17'},
-	{name: '[TWIST] Lv.2',description: 'Street show down S16',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'Street show down',diff: 'S16'},
-	{name: '[TWIST] Lv.1',description: 'Scorpion King S13',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'Scorpion King',diff: 'S13'},
-	{name: '[XX] Double',description: '1949 D28',tier: 'platinum',type: 'boss',song: '1949',diff: 'D28'},
-	{name: '[XX] Single',description: 'ERRORCODE: 0 S25',tier: 'gold',type: 'boss',song: 'ERRORCODE: 0',diff: 'S25'},
-	{name: '[PRIME2] Double',description: 'Shub Sothoth D27',tier: 'platinum',type: 'boss',song: 'Shub Sothoth',diff: 'D27'},
-	{name: '[PRIME2] Single',description: 'Shub Sothoth S25',tier: 'gold',type: 'boss',song: 'Shub Sothoth',diff: 'S25'},
-	{name: '[PRIME] Double',description: 'Paradoxx D28',tier: 'platinum',type: 'boss',song: 'Paradoxx',diff: 'D28'},
-	{name: '[PRIME] Single',description: 'Paradoxx S26',tier: 'gold',type: 'boss',song: 'Paradoxx',diff: 'S26'},
-	{name: '[FIESTA2] Double',description: 'Ignis Fatuus D25',tier: 'gold',type: 'boss',song: 'Ignis Fatuus',diff: 'D25'},
-	{name: '[FIESTA2] Single',description: 'Ignis Fatuus S22',tier: 'silver',type: 'boss',song: 'Ignis Fatuus',diff: 'S22'},
-	{name: '[FIESTA EX] Double',description: 'Vacuum Cleaner D26',tier: 'gold',type: 'boss',song: 'Vacuum Cleaner',diff: 'D26'},
-	{name: '[FIESTA EX] Single',description: 'Vacuum Cleaner S25',tier: 'gold',type: 'boss',song: 'Vacuum Cleaner',diff: 'S25'},
-	{name: '[FIESTA] Double',description: 'Vacuum D25',tier: 'gold',type: 'boss',song: 'Vacuum',diff: 'D25'},
-	{name: '[FIESTA] Single',description: 'Vacuum S23',tier: 'silver',type: 'boss',song: 'Vacuum',diff: 'S23'},
-	{name: '[NXA] Double',description: 'Final Audition Ep. 2-X D24',tier: 'gold',type: 'boss',song: 'Final Audition Ep. 2-X',diff: 'D24'},
-	{name: '[NXA] Single',description: 'Final Audition Ep. 2-X S23',tier: 'silver',type: 'boss',song: 'Final Audition Ep. 2-X',diff: 'S23'},
-	{name: '[NX2] Double',description: 'Banya-P Guitar Remix D24',tier: 'gold',type: 'boss',song: 'Banya-P Guitar Remix',diff: 'D24'},
-	{name: '[NX2] Single',description: 'Banya-P Guitar Remix S22',tier: 'silver',type: 'boss',song: 'Banya-P Guitar Remix',diff: 'S22'},
-	{name: '[NX] Double',description: 'Bemera D26',tier: 'gold',type: 'boss',song: 'Bemera',diff: 'D26'},
-	{name: '[NX] Single',description: 'Bemera S24',tier: 'silver',type: 'boss',song: 'Bemera',diff: 'S24'},
-	{name: '[ZERO] Double',description: 'Love is a Danger Zone pt. 2 D24',tier: 'silver',type: 'boss',song: 'Love is a Danger Zone pt. 2',diff: 'D24'},
-	{name: '[ZERO] Single',description: 'Love is a Danger Zone pt. 2 S22',tier: 'silver',type: 'boss',song: 'Love is a Danger Zone pt. 2',diff: 'S22'},
-	{name: '[EXCEED2] Double',description: 'Canon D D23',tier: 'silver',type: 'boss',song: 'Canon D',diff: 'D23'},
-	{name: '[EXCEED2] Single',description: 'Canon D S20',tier: 'silver',type: 'boss',song: 'Canon D',diff: 'S20'},
-	{name: '[EXCEED] Double',description: 'Dignity D24',tier: 'gold',type: 'boss',song: 'Dignity',diff: 'D24'},
-	{name: '[EXCEED] Single',description: 'Dignity S21',tier: 'silver',type: 'boss',song: 'Dignity',diff: 'S21'},
-	{name: '[THE PREX3]',description: 'Bee S17',tier: 'bronze',type: 'boss',song: 'Bee',diff: 'S17'},
-	{name: '[THE REBIRTH]',description: 'Love is a Danger Zone S17',tier: 'bronze',type: 'boss',song: 'Love is a Danger Zone',diff: 'S17'},
-	{name: '[EXTRA]',description: 'Radetzky Can Can D18',tier: 'bronze',type: 'boss',song: 'Radetzky Can Can',diff: 'D18'},
-	{name: '[Perfect Collection]',description: 'Slam S18',tier: 'bronze',type: 'boss',song: 'Slam',diff: 'S18'},
-	{name: '[The O.B.G SE]',description: 'Mr. Larpus S15',tier: 'bronze',type: 'boss',song: 'Mr. Larpus',diff: 'S15'},
-	{name: '[The O.B.G]',description: 'Turkey March S12',tier: 'bronze',type: 'boss',song: 'Turkey March',diff: 'S12'},
-	{name: '[The 2nd]',description: 'Extravaganza S11',tier: 'bronze',type: 'boss',song: 'Extravaganza',diff: 'S11'},
-	{name: '[The 1st]',description: 'Another Truth S6',tier: 'bronze',type: 'boss',song: 'Another Truth',diff: 'S6'},
+  {name: 'THE MASTER',description: '[Lv.28] 1,900 rating',tier: 'platinum',type: 'rating',level: '28',rating: '1900'},
+  {name: 'EXPERT Lv.10',description: '[Lv.27] 7,000 rating',tier: 'platinum',type: 'rating',level: '27',rating: '7000'},
+  {name: 'EXPERT Lv.9',description: '[Lv.27] 3,500 rating',tier: 'gold',type: 'rating',level: '27',rating: '3500'},
+  {name: 'EXPERT Lv.8',description: '[Lv.26] 26,000 rating',tier: 'gold',type: 'rating',level: '26',rating: '26000'},
+  {name: 'EXPERT Lv.7',description: '[Lv.26] 13,000 rating',tier: 'gold',type: 'rating',level: '26',rating: '13000'},
+  {name: 'EXPERT Lv.6',description: '[Lv.25] 40,000 rating',tier: 'gold',type: 'rating',level: '25',rating: '40000'},
+  {name: 'EXPERT Lv.5',description: '[Lv.25] 20,000 rating',tier: 'gold',type: 'rating',level: '25',rating: '20000'},
+  {name: 'EXPERT Lv.4',description: '[Lv.24] 60,000 rating',tier: 'gold',type: 'rating',level: '24',rating: '60000'},
+  {name: 'EXPERT Lv.3',description: '[Lv.24] 30,000 rating',tier: 'gold',type: 'rating',level: '24',rating: '30000'},
+  {name: 'EXPERT Lv.2',description: '[Lv.23] 80,000 rating',tier: 'gold',type: 'rating',level: '23',rating: '80000'},
+  {name: 'EXPERT Lv.1',description: '[Lv.23] 40,000 rating',tier: 'gold',type: 'rating',level: '23',rating: '40000'},
+  {name: 'ADVANCED Lv.10',description: '[Lv.22] 70,000 rating',tier: 'silver',type: 'rating',level: '22',rating: '70000'},
+  {name: 'ADVANCED Lv.9',description: '[Lv.22] 52,500 rating',tier: 'silver',type: 'rating',level: '22',rating: '52500'},
+  {name: 'ADVANCED Lv.8',description: '[Lv.22] 35,000 rating',tier: 'silver',type: 'rating',level: '22',rating: '35000'},
+  {name: 'ADVANCED Lv.7',description: '[Lv.22] 17,500 rating',tier: 'silver',type: 'rating',level: '22',rating: '17500'},
+  {name: 'ADVANCED Lv.6',description: '[Lv.21] 45,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '45000'},
+  {name: 'ADVANCED Lv.5',description: '[Lv.21] 30,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '30000'},
+  {name: 'ADVANCED Lv.4',description: '[Lv.21] 15,000 rating',tier: 'silver',type: 'rating',level: '21',rating: '15000'},
+  {name: 'ADVANCED Lv.3',description: '[Lv.20] 39,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '39000'},
+  {name: 'ADVANCED Lv.2',description: '[Lv.20] 26,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '26000'},
+  {name: 'ADVANCED Lv.1',description: '[Lv.20] 13,000 rating',tier: 'silver',type: 'rating',level: '20',rating: '13000'},
+  {name: 'INTERMEDIATE Lv.10',description: '[Lv.19] 11,000 rating',tier: 'bronze',type: 'rating',level: '19',rating: '11000'},
+  {name: 'INTERMEDIATE Lv.9',description: '[Lv.18] 9,200 rating',tier: 'bronze',type: 'rating',level: '18',rating: '9200'},
+  {name: 'INTERMEDIATE Lv.8',description: '[Lv.17] 7,600 rating',tier: 'bronze',type: 'rating',level: '17',rating: '7600'},
+  {name: 'INTERMEDIATE Lv.7',description: '[Lv.16] 6,200 rating',tier: 'bronze',type: 'rating',level: '16',rating: '6200'},
+  {name: 'INTERMEDIATE Lv.6',description: '[Lv.15] 5,000 rating',tier: 'bronze',type: 'rating',level: '15',rating: '5000'},
+  {name: 'INTERMEDIATE Lv.5',description: '[Lv.14] 4,000 rating',tier: 'bronze',type: 'rating',level: '14',rating: '4000'},
+  {name: 'INTERMEDIATE Lv.4',description: '[Lv.13] 3,200 rating',tier: 'bronze',type: 'rating',level: '13',rating: '3200'},
+  {name: 'INTERMEDIATE Lv.3',description: '[Lv.12] 2,600 rating',tier: 'bronze',type: 'rating',level: '12',rating: '2600'},
+  {name: 'INTERMEDIATE Lv.2',description: '[Lv.11] 2,200 rating',tier: 'bronze',type: 'rating',level: '11',rating: '2200'},
+  {name: 'INTERMEDIATE Lv.1',description: '[Lv.10] 2,000 rating',tier: 'bronze',type: 'rating',level: '10',rating: '2000'},
+  {name: 'SPECIALIST',description: 'All skill titles',tier: 'platinum',type: 'skill_collect',collect_type: 'skill',count: 60},
+  {name: '[BRACKET] EXPERT',description: 'All Bracket titles',tier: 'platinum',type: 'skill_collect',collect_type: 'bracket',count: 10},
+  {name: '[BRACKET] Lv.10',description: 'Phalanx D24',tier: 'platinum',type: 'skill',collect_type: 'bracket',song: 'Phalanx',diff: 'D24'},
+  {name: '[BRACKET] Lv.9',description: 'Scorpion King D23',tier: 'platinum',type: 'skill',collect_type: 'bracket',song: 'Scorpion King',diff: 'D23'},
+  {name: '[BRACKET] Lv.8',description: 'Pop Sequence D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'Pop Sequence',diff: 'D23'},
+  {name: '[BRACKET] Lv.7',description: 'What Happened D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'D23'},
+  {name: '[BRACKET] Lv.6',description: 'Meteo5cience D22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D22'},
+  {name: '[BRACKET] Lv.5',description: 'Phalanx S22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Phalanx',diff: 'S22'},
+  {name: '[BRACKET] Lv.4',description: 'What Happened S21',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'S21'},
+  {name: '[BRACKET] Lv.3',description: 'Meteo5cience D21',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D21'},
+  {name: '[BRACKET] Lv.2',description: 'Mad5cience S20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Mad5cience',diff: 'S20'},
+  {name: '[BRACKET] Lv.1',description: 'Allegro furioso D20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Allegro furioso',diff: 'D20'},
+  {name: '[HALF] EXPERT',description: 'All Half titles',tier: 'platinum',type: 'skill_collect',collect_type: 'half',count: 10},
+  {name: '[HALF] Lv.10',description: 'Imprinting D24',tier: 'platinum',type: 'skill',collect_type: 'half',song: 'Imprinting',diff: 'D24'},
+  {name: '[HALF] Lv.9',description: 'Love is a Danger Zone 2 Try To B.P.M D23',tier: 'platinum',type: 'skill',collect_type: 'half',song: 'Love is a Danger Zone 2 Try To B.P.M',diff: 'D23'},
+  {name: '[HALF] Lv.8',description: 'Redline D22',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Redline',diff: 'D22'},
+  {name: '[HALF] Lv.7',description: 'Witch Doctor #1 D21',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Witch Doctor #1',diff: 'D21'},
+  {name: '[HALF] Lv.6',description: 'Utsushiyo No Kaze D20',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Utsushiyo No Kaze',diff: 'D20'},
+  {name: '[HALF] Lv.5',description: 'Phantom D19',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Phantom',diff: 'D19'},
+  {name: '[HALF] Lv.4',description: 'Super Fantasy D18',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Super Fantasy',diff: 'D18'},
+  {name: '[HALF] Lv.3',description: 'Shub Niggurath D18',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Shub Niggurath',diff: 'D18'},
+  {name: '[HALF] Lv.2',description: 'Butterfly D17',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Butterfly',diff: 'D17'},
+  {name: '[HALF] Lv.1',description: 'Mopemope D17',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Mopemope',diff: 'D17'},
+  {name: '[GIMMICK] EXPERT',description: 'All Gimmick titles',tier: 'platinum',type: 'skill_collect',collect_type: 'gimmick',count: 10},
+  {name: '[GIMMICK] Lv.10',description: 'Everybody Got 2 Know S21',tier: 'platinum',type: 'skill',collect_type: 'gimmick',song: 'Everybody Got 2 Know',diff: 'S21'},
+  {name: '[GIMMICK] Lv.9',description: '8 6 S20',tier: 'platinum',type: 'skill',collect_type: 'gimmick',song: '8 6',diff: 'S20'},
+  {name: '[GIMMICK] Lv.8',description: 'Twist of Fate (feat. Ruriling) S19',tier: 'gold',type: 'skill',collect_type: 'gimmick',song: 'Twist of Fate (feat. Ruriling)',diff: 'S19'},
+  {name: '[GIMMICK] Lv.7',description: 'Nakakapagpabagabag S19',tier: 'gold',type: 'skill',collect_type: 'gimmick',song: 'Nakakapagpabagabag',diff: 'S19'},
+  {name: '[GIMMICK] Lv.6',description: 'Miss S\' story S19',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Miss S\' story',diff: 'S19'},
+  {name: '[GIMMICK] Lv.5',description: 'Rock the house - SHORT CUT - S18',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Rock the house - SHORT CUT -',diff: 'S18'},
+  {name: '[GIMMICK] Lv.4',description: 'Come to Me S17',tier: 'silver',type: 'skill',collect_type: 'gimmick',song: 'Come to Me',diff: 'S17'},
+  {name: '[GIMMICK] Lv.3',description: 'Ugly Dee S17',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: 'Ugly Dee',diff: 'S17'},
+  {name: '[GIMMICK] Lv.2',description: '8 6 S16',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: '8 6',diff: 'S16'},
+  {name: '[GIMMICK] Lv.1',description: 'Yeo rae a S13',tier: 'bronze',type: 'skill',collect_type: 'gimmick',song: 'Yeo rae a',diff: 'S13'},
+  {name: '[DRILL] EXPERT',description: 'All Drill titles',tier: 'platinum',type: 'skill_collect',collect_type: 'drill',count: 10},
+  {name: '[DRILL] Lv.10',description: 'WI-EX-DOC-VA D24',tier: 'platinum',type: 'skill',collect_type: 'drill',song: 'WI-EX-DOC-VA',diff: 'D24'},
+  {name: '[DRILL] Lv.9',description: 'Witch Doctor D23',tier: 'platinum',type: 'skill',collect_type: 'drill',song: 'Witch Doctor',diff: 'D23'},
+  {name: '[DRILL] Lv.8',description: 'Rock the house D22',tier: 'gold',type: 'skill',collect_type: 'drill',song: 'Rock the house',diff: 'D22'},
+  {name: '[DRILL] Lv.7',description: 'Sorceress Elise S21',tier: 'gold',type: 'skill',collect_type: 'drill',song: 'Sorceress Elise',diff: 'S21'},
+  {name: '[DRILL] Lv.6',description: 'Overblow S20',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Overblow',diff: 'S20'},
+  {name: '[DRILL] Lv.5',description: 'Vacuum S19',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Vacuum',diff: 'S19'},
+  {name: '[DRILL] Lv.4',description: 'Moonlight S18',tier: 'silver',type: 'skill',collect_type: 'drill',song: 'Moonlight',diff: 'S18'},
+  {name: '[DRILL] Lv.3',description: 'Gun Rock S17',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Gun Rock',diff: 'S17'},
+  {name: '[DRILL] Lv.2',description: 'Vook S16',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Vook',diff: 'S16'},
+  {name: '[DRILL] Lv.1',description: 'Hellfire S13',tier: 'bronze',type: 'skill',collect_type: 'drill',song: 'Hellfire',diff: 'S13'},
+  {name: '[RUN] EXPERT',description: 'All Run titles',tier: 'platinum',type: 'skill_collect',collect_type: 'run',count: 10},
+  {name: '[RUN] Lv.10',description: 'Yog-Sothoth D24',tier: 'platinum',type: 'skill',collect_type: 'run',song: 'Yog-Sothoth',diff: 'D24'},
+  {name: '[RUN] Lv.9',description: 'Baroque Virus - FULL SONG - D23',tier: 'platinum',type: 'skill',collect_type: 'run',song: 'Baroque Virus - FULL SONG -',diff: 'D23'},
+  {name: '[RUN] Lv.8',description: 'Gargoyle - FULL SONG - D22',tier: 'gold',type: 'skill',collect_type: 'run',song: 'Gargoyle - FULL SONG -',diff: 'D22'},
+  {name: '[RUN] Lv.7',description: 'Sarabande D21',tier: 'gold',type: 'skill',collect_type: 'run',song: 'Sarabande',diff: 'D21'},
+  {name: '[RUN] Lv.6',description: 'Bee D20',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Bee',diff: 'D20'},
+  {name: '[RUN] Lv.5',description: 'Napalm S19',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Napalm',diff: 'S19'},
+  {name: '[RUN] Lv.4',description: 'Gothique Resonance S18',tier: 'silver',type: 'skill',collect_type: 'run',song: 'Gothique Resonance',diff: 'S18'},
+  {name: '[RUN] Lv.3',description: 'Pavane S17',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Pavane',diff: 'S17'},
+  {name: '[RUN] Lv.2',description: 'Super Fantasy S16',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Super Fantasy',diff: 'S16'},
+  {name: '[RUN] Lv.1',description: 'Switronic S13',tier: 'bronze',type: 'skill',collect_type: 'run',song: 'Switronic',diff: 'S13'},
+  {name: '[TWIST] EXPERT',description: 'All Twist titles',tier: 'platinum',type: 'skill_collect',collect_type: 'twist',count: 10},
+  {name: '[TWIST] Lv.10',description: 'Bee D24',tier: 'platinum',type: 'skill',collect_type: 'twist',song: 'Bee',diff: 'D24'},
+  {name: '[TWIST] Lv.9',description: 'Love Is A Danger Zone(Cranky Mix) D23',tier: 'platinum',type: 'skill',collect_type: 'twist',song: 'Love Is A Danger Zone(Cranky Mix)',diff: 'D23'},
+  {name: '[TWIST] Lv.8',description: 'Super Fantasy D22',tier: 'gold',type: 'skill',collect_type: 'twist',song: 'Super Fantasy',diff: 'D22'},
+  {name: '[TWIST] Lv.7',description: 'Love is a Danger Zone D21',tier: 'gold',type: 'skill',collect_type: 'twist',song: 'Love is a Danger Zone',diff: 'D21'},
+  {name: '[TWIST] Lv.6',description: 'Witch Doctor #1 D20',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'Witch Doctor #1',diff: 'D20'},
+  {name: '[TWIST] Lv.5',description: 'U GOT 2 KNOW S19',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'U GOT 2 KNOW',diff: 'S19'},
+  {name: '[TWIST] Lv.4',description: 'Solitary 2 S18',tier: 'silver',type: 'skill',collect_type: 'twist',song: 'Solitary 2',diff: 'S18'},
+  {name: '[TWIST] Lv.3',description: 'U Got Me Rocking S17',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'U Got Me Rocking',diff: 'S17'},
+  {name: '[TWIST] Lv.2',description: 'Street show down S16',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'Street show down',diff: 'S16'},
+  {name: '[TWIST] Lv.1',description: 'Scorpion King S13',tier: 'bronze',type: 'skill',collect_type: 'twist',song: 'Scorpion King',diff: 'S13'},
+  {name: '[XX] Double',description: '1949 D28',tier: 'platinum',type: 'boss',song: '1949',diff: 'D28'},
+  {name: '[XX] Single',description: 'ERRORCODE: 0 S25',tier: 'gold',type: 'boss',song: 'ERRORCODE: 0',diff: 'S25'},
+  {name: '[PRIME2] Double',description: 'Shub Sothoth D27',tier: 'platinum',type: 'boss',song: 'Shub Sothoth',diff: 'D27'},
+  {name: '[PRIME2] Single',description: 'Shub Sothoth S25',tier: 'gold',type: 'boss',song: 'Shub Sothoth',diff: 'S25'},
+  {name: '[PRIME] Double',description: 'Paradoxx D28',tier: 'platinum',type: 'boss',song: 'Paradoxx',diff: 'D28'},
+  {name: '[PRIME] Single',description: 'Paradoxx S26',tier: 'gold',type: 'boss',song: 'Paradoxx',diff: 'S26'},
+  {name: '[FIESTA2] Double',description: 'Ignis Fatuus D25',tier: 'gold',type: 'boss',song: 'Ignis Fatuus',diff: 'D25'},
+  {name: '[FIESTA2] Single',description: 'Ignis Fatuus S22',tier: 'silver',type: 'boss',song: 'Ignis Fatuus',diff: 'S22'},
+  {name: '[FIESTA EX] Double',description: 'Vacuum Cleaner D26',tier: 'gold',type: 'boss',song: 'Vacuum Cleaner',diff: 'D26'},
+  {name: '[FIESTA EX] Single',description: 'Vacuum Cleaner S25',tier: 'gold',type: 'boss',song: 'Vacuum Cleaner',diff: 'S25'},
+  {name: '[FIESTA] Double',description: 'Vacuum D25',tier: 'gold',type: 'boss',song: 'Vacuum',diff: 'D25'},
+  {name: '[FIESTA] Single',description: 'Vacuum S23',tier: 'silver',type: 'boss',song: 'Vacuum',diff: 'S23'},
+  {name: '[NXA] Double',description: 'Final Audition Ep. 2-X D24',tier: 'gold',type: 'boss',song: 'Final Audition Ep. 2-X',diff: 'D24'},
+  {name: '[NXA] Single',description: 'Final Audition Ep. 2-X S23',tier: 'silver',type: 'boss',song: 'Final Audition Ep. 2-X',diff: 'S23'},
+  {name: '[NX2] Double',description: 'Banya-P Guitar Remix D24',tier: 'gold',type: 'boss',song: 'Banya-P Guitar Remix',diff: 'D24'},
+  {name: '[NX2] Single',description: 'Banya-P Guitar Remix S22',tier: 'silver',type: 'boss',song: 'Banya-P Guitar Remix',diff: 'S22'},
+  {name: '[NX] Double',description: 'Bemera D26',tier: 'gold',type: 'boss',song: 'Bemera',diff: 'D26'},
+  {name: '[NX] Single',description: 'Bemera S24',tier: 'silver',type: 'boss',song: 'Bemera',diff: 'S24'},
+  {name: '[ZERO] Double',description: 'Love is a Danger Zone pt. 2 D24',tier: 'silver',type: 'boss',song: 'Love is a Danger Zone pt. 2',diff: 'D24'},
+  {name: '[ZERO] Single',description: 'Love is a Danger Zone pt. 2 S22',tier: 'silver',type: 'boss',song: 'Love is a Danger Zone pt. 2',diff: 'S22'},
+  {name: '[EXCEED2] Double',description: 'Canon D D23',tier: 'silver',type: 'boss',song: 'Canon D',diff: 'D23'},
+  {name: '[EXCEED2] Single',description: 'Canon D S20',tier: 'silver',type: 'boss',song: 'Canon D',diff: 'S20'},
+  {name: '[EXCEED] Double',description: 'Dignity D24',tier: 'gold',type: 'boss',song: 'Dignity',diff: 'D24'},
+  {name: '[EXCEED] Single',description: 'Dignity S21',tier: 'silver',type: 'boss',song: 'Dignity',diff: 'S21'},
+  {name: '[THE PREX3]',description: 'Bee S17',tier: 'bronze',type: 'boss',song: 'Bee',diff: 'S17'},
+  {name: '[THE REBIRTH]',description: 'Love is a Danger Zone S17',tier: 'bronze',type: 'boss',song: 'Love is a Danger Zone',diff: 'S17'},
+  {name: '[EXTRA]',description: 'Radetzky Can Can D18',tier: 'bronze',type: 'boss',song: 'Radetzky Can Can',diff: 'D18'},
+  {name: '[Perfect Collection]',description: 'Slam S18',tier: 'bronze',type: 'boss',song: 'Slam',diff: 'S18'},
+  {name: '[The O.B.G SE]',description: 'Mr. Larpus S15',tier: 'bronze',type: 'boss',song: 'Mr. Larpus',diff: 'S15'},
+  {name: '[The O.B.G]',description: 'Turkey March S12',tier: 'bronze',type: 'boss',song: 'Turkey March',diff: 'S12'},
+  {name: '[The 2nd]',description: 'Extravaganza S11',tier: 'bronze',type: 'boss',song: 'Extravaganza',diff: 'S11'},
+  {name: '[The 1st]',description: 'Another Truth S6',tier: 'bronze',type: 'boss',song: 'Another Truth',diff: 'S6'},
 ];
 const new_songs = [
-	"Pirate","Airplane","STORM","Beautiful Liar","After LIKE","Amor Fati","Alone","Teddy Bear","Nxde","BOCA","BATTLE NO.1","R.I.P","GOODBOUNCE","Halcyon","Altale","Pneumonoultramicroscopicsilicovolcanoconiosis ft. Kagamine Len/GUMI","Acquire","MilK","Energy Synergy Matrix","CO5M1C R4ILR0AD","GOODTEK","Lohxia","CHAOS AGAIN","MURDOCH","Ghroth","KUGUTSU","BOOOM!!","Etude Op 10-4","Jupin","Euphorianic","Showdown","Versailles","VECTOR","WHISPER","Halloween Party ~Multiverse~","Lacrimosa","Galaxy Collapse","Euphorianic - SHORT CUT -","ELEVEN","Neo Catharsis","Barber's Madness","Aragami","Viyella's Nightmare","Spray","Yo! Say!! Fairy!!!","Curiosity Overdrive","iRELLiA","PUPA"
+  "Pirate","Airplane","STORM","Beautiful Liar","After LIKE","Amor Fati","Alone","Teddy Bear","Nxde","BOCA","BATTLE NO.1","R.I.P","GOODBOUNCE","Halcyon","Altale","Pneumonoultramicroscopicsilicovolcanoconiosis ft. Kagamine Len/GUMI","Acquire","MilK","Energy Synergy Matrix","CO5M1C R4ILR0AD","GOODTEK","Lohxia","CHAOS AGAIN","MURDOCH","Ghroth","KUGUTSU","BOOOM!!","Etude Op 10-4","Jupin","Euphorianic","Showdown","Versailles","VECTOR","WHISPER","Halloween Party ~Multiverse~","Lacrimosa","Galaxy Collapse","Euphorianic - SHORT CUT -","ELEVEN","Neo Catharsis","Barber's Madness","Aragami","Viyella's Nightmare","Spray","Yo! Say!! Fairy!!!","Curiosity Overdrive","iRELLiA","PUPA","TOMBOY","PANDORA","Bluish Rose","Flavor Step!","TRICKL4SH 220"
 ]
 const pump_bg = {
   "All I Want For X-mas":"https://pumpout2020.anyhowstep.com/img/card/20.png",
@@ -1694,5 +1694,10 @@ const pump_bg = {
   "Yo! Say!! Fairy!!!":"https://piugame.com/data/song_img/1afce79a91b11aacedfadb6f8f0c360c.png",
   "Spray":"https://piugame.com/data/song_img/d89b413ad14fae24007dfdd77a387d6c.png",
   "iRELLiA":"https://piugame.com/data/song_img/282c1e3e7427966fe98c2fb2accfa9d6.png",
-  "PUPA":"https://piugame.com/data/song_img/adf1054211294efcbfb92ac97a37ec75.png"
+  "PUPA":"https://piugame.com/data/song_img/adf1054211294efcbfb92ac97a37ec75.png",
+  "TOMBOY":"https://piugame.com/data/song_img/ec342950e66150e76a00b09492dfda3c.png",
+  "PANDORA":"https://piugame.com/data/song_img/45a186e942deff08bc88bf9141e2d1dd.png",
+  "Bluish Rose":"https://piugame.com/data/song_img/03b6b88c054909e454b57dd7b7dfb831.png",
+  "Flavor Step!":"https://piugame.com/data/song_img/2eecbab75fb2d9f0f95971ff487fc934.png",
+  "TRICKL4SH 220":"https://piugame.com/data/song_img/81c807da9ac1fd29e74ab8a510976789.png"
 }
