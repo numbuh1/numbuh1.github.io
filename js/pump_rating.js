@@ -727,10 +727,10 @@ const expert_titles = [
   {name: '[BRACKET] Lv.9',description: 'Scorpion King D23',tier: 'platinum',type: 'skill',collect_type: 'bracket',song: 'Scorpion King',diff: 'D23'},
   {name: '[BRACKET] Lv.8',description: 'Pop Sequence D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'Pop Sequence',diff: 'D23'},
   {name: '[BRACKET] Lv.7',description: 'What Happened D23',tier: 'gold',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'D23'},
-  {name: '[BRACKET] Lv.6',description: 'Meteo5cience D22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D22'},
+  {name: '[BRACKET] Lv.6',description: 'Meteo5cience D22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience (GADGET mix)',diff: 'D22'},
   {name: '[BRACKET] Lv.5',description: 'Phalanx S22',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'Phalanx',diff: 'S22'},
   {name: '[BRACKET] Lv.4',description: 'What Happened S21',tier: 'silver',type: 'skill',collect_type: 'bracket',song: 'What Happened',diff: 'S21'},
-  {name: '[BRACKET] Lv.3',description: 'Meteo5cience D21',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience',diff: 'D21'},
+  {name: '[BRACKET] Lv.3',description: 'Meteo5cience D21',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Meteo5cience (GADGET mix)',diff: 'D21'},
   {name: '[BRACKET] Lv.2',description: 'Mad5cience S20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Mad5cience',diff: 'S20'},
   {name: '[BRACKET] Lv.1',description: 'Allegro furioso D20',tier: 'bronze',type: 'skill',collect_type: 'bracket',song: 'Allegro furioso',diff: 'D20'},
   {name: '[HALF] EXPERT',description: 'All Half titles',tier: 'platinum',type: 'skill_collect',collect_type: 'half',count: 10},
@@ -738,7 +738,7 @@ const expert_titles = [
   {name: '[HALF] Lv.9',description: 'Love is a Danger Zone 2 Try To B.P.M D23',tier: 'platinum',type: 'skill',collect_type: 'half',song: 'Love is a Danger Zone 2 Try To B.P.M',diff: 'D23'},
   {name: '[HALF] Lv.8',description: 'Redline D22',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Redline',diff: 'D22'},
   {name: '[HALF] Lv.7',description: 'Witch Doctor #1 D21',tier: 'gold',type: 'skill',collect_type: 'half',song: 'Witch Doctor #1',diff: 'D21'},
-  {name: '[HALF] Lv.6',description: 'Utsushiyo No Kaze D20',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Utsushiyo No Kaze',diff: 'D20'},
+  {name: '[HALF] Lv.6',description: 'Utsushiyo No Kaze D20',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Utsushiyo No Kaze feat. Kana',diff: 'D20'},
   {name: '[HALF] Lv.5',description: 'Phantom D19',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Phantom',diff: 'D19'},
   {name: '[HALF] Lv.4',description: 'Super Fantasy D18',tier: 'silver',type: 'skill',collect_type: 'half',song: 'Super Fantasy',diff: 'D18'},
   {name: '[HALF] Lv.3',description: 'Shub Niggurath D18',tier: 'bronze',type: 'skill',collect_type: 'half',song: 'Shub Niggurath',diff: 'D18'},
@@ -819,7 +819,7 @@ const expert_titles = [
   {name: '[The O.B.G SE]',description: 'Mr. Larpus S15',tier: 'bronze',type: 'boss',song: 'Mr. Larpus',diff: 'S15'},
   {name: '[The O.B.G]',description: 'Turkey March S12',tier: 'bronze',type: 'boss',song: 'Turkey March',diff: 'S12'},
   {name: '[The 2nd]',description: 'Extravaganza S11',tier: 'bronze',type: 'boss',song: 'Extravaganza',diff: 'S11'},
-  {name: '[The 1st]',description: 'Another Truth S6',tier: 'bronze',type: 'boss',song: 'Another Truth',diff: 'S6'},
+  {name: '[The 1st]',description: 'Another Truth S6',tier: 'bronze',type: 'boss',song: 'Another Truth',diff: 'S06'},
 ];
 const new_songs = [
   "Pirate","Airplane","STORM","Beautiful Liar","After LIKE","Amor Fati","Alone","Teddy Bear","Nxde","BOCA","BATTLE NO.1","R.I.P","GOODBOUNCE","Halcyon","Altale","Pneumonoultramicroscopicsilicovolcanoconiosis ft. Kagamine Len/GUMI","Acquire","MilK","Energy Synergy Matrix","CO5M1C R4ILR0AD","GOODTEK","Lohxia","CHAOS AGAIN","MURDOCH","Ghroth","KUGUTSU","BOOOM!!","Etude Op 10-4","Jupin","Euphorianic","Showdown","Versailles","VECTOR","WHISPER","Halloween Party ~Multiverse~","Lacrimosa","Galaxy Collapse","Euphorianic - SHORT CUT -","ELEVEN","Neo Catharsis","Barber's Madness","Aragami","Viyella's Nightmare","Spray","Yo! Say!! Fairy!!!","Curiosity Overdrive","iRELLiA","PUPA","TOMBOY","PANDORA","Bluish Rose","Flavor Step!","TRICKL4SH 220"
@@ -1531,7 +1531,7 @@ const pump_bg = {
   "Gashina":"https://pumpout2020.anyhowstep.com/img/card/xx-gashina.png",
   "YOU AND I":"https://pumpout2020.anyhowstep.com/img/card/xx-you-and-i.png",
   "Allegro Con Fuoco - FULL SONG -":"https://pumpout2020.anyhowstep.com/img/card/xx-allegro-con-fuoco-full.png",
-  "Meteo5cience":"https://pumpout2020.anyhowstep.com/img/card/xx-meteo-science.png",
+  "Meteo5cience (GADGET mix)":"https://pumpout2020.anyhowstep.com/img/card/xx-meteo-science.png",
   "Rage of Fire":"https://pumpout2020.anyhowstep.com/img/card/xx-rage-of-fire.png",
   "Starry Night":"https://pumpout2020.anyhowstep.com/img/card/1658.png",
   "Conflict":"https://pumpout2020.anyhowstep.com/img/card/1676.png",
@@ -1635,7 +1635,7 @@ const pump_bg = {
   "Telling Fortune Flower":"https://pumpout2020.anyhowstep.com/img/card/1614.png",
   "GLORIA":"https://pumpout2020.anyhowstep.com/img/card/1699.png",
   "Kokugen Kairou Labyrinth":"https://pumpout2020.anyhowstep.com/img/card/1718.png",
-  "Papasito (feat. KuTiNA) - FULL SONG -":"https://pumpout2020.anyhowstep.com/img/card/16C9.png",
+  "Papasito (feat.  KuTiNA) - FULL SONG -":"https://pumpout2020.anyhowstep.com/img/card/16C9.png",
   "Paved Garden":"https://pumpout2020.anyhowstep.com/img/card/1638.png",
   "Pop Sequence":"https://pumpout2020.anyhowstep.com/img/card/1639.png",
   "Ultimatum":"https://pumpout2020.anyhowstep.com/img/card/1705.png",
@@ -1699,5 +1699,10 @@ const pump_bg = {
   "PANDORA":"https://piugame.com/data/song_img/45a186e942deff08bc88bf9141e2d1dd.png",
   "Bluish Rose":"https://piugame.com/data/song_img/03b6b88c054909e454b57dd7b7dfb831.png",
   "Flavor Step!":"https://piugame.com/data/song_img/2eecbab75fb2d9f0f95971ff487fc934.png",
-  "TRICKL4SH 220":"https://piugame.com/data/song_img/81c807da9ac1fd29e74ab8a510976789.png"
+  "TRICKL4SH 220":"https://piugame.com/data/song_img/81c807da9ac1fd29e74ab8a510976789.png",
+  "See":"https://piugame.com/data/song_img/2e0daf0c0eb3b5a188a20eb0a7dd1581.png",
+  "Sudden Appearance Image":"https://piugame.com/data/song_img/b2bd709009f25a9ac3618390c7b9917e.png",
+  "Simon Says, EURODANCE!! (feat. Sara☆M)":"https://piugame.com/data/song_img/ecc05e7a2615a2a2770e4a8c5487eb4c.png",
+  "Little Munchkin":"https://piugame.com/data/song_img/d59295bf426a99e64848df63ced40717.png",
+  "STAGER":"https://piugame.com/data/song_img/07e7d5fd7daa31f830fea74250cc2186.png"
 }
